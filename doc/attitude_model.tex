@@ -3,16 +3,16 @@
 \newcommand{\project}[1]{\textsl{#1}}
 \newcommand{\gaia}{\project{Gaia}}
 
-\begin{document}
+\begin{document}\sloppy\sloppypar\raggedbottom
 
 Here are the points I want to make in this document:
 
-1.~The four-second CCD transit time in \gaia has almost nothing to do
+1.~The four-second CCD transit time in \gaia\ has almost nothing to do
 with the choice of how frequently there should be ``knots'' or control
 points in the data-driven attitude model.  It is true that the mission
 is not really sensitive to attitude issues on much smaller time scales
 than four seconds, but there might be stability on mych longer time
-scales.  This choice of knot spacing obviates that kind of
+scales.  This pre-launch choice of knot spacing precludes that kind of
 (exceedingly valuable) discovery.
 
 2.~Reducing model complexity, even though it reduces model freedom,
@@ -42,18 +42,17 @@ over it (equivalent to marginalizing out a hyperparameter in a
 hierarchical Bayesian model).
 
 4c.~Go to an infinite-dimensional model that has (or really learns)
-spacecraft solid-body physics and a (very large) set of angular
-impulse parameters.  Never actually instantiate or report these
-parameters, but work in an ``always marginalized'' framework in which
-only the (physically motivated) probability distribution function
-(PDF) for the distribution of angular impulses is learned.  That is,
-go hierarchical, learn the hyperparameters, and marginalize out the
-infinite number of angular impulses.
+s/c solid-body physics and a (very large) set of angular impulse
+parameters.  Never actually instantiate or report these parameters,
+but work in an ``always marginalized'' framework in which only the
+(physically motivated) PDF for the angular impulses is learned.  That
+is, go hierarchical, learn the hyperparameters, and marginalize out
+the infinite number of angular impulses.
 
 Ideally, in this document, if I cared enough to send the very best, I
 would:
 
-5.~Build a toy one-dimensional model of the \gaia spacecraft, with a
+5.~Build a toy one-dimensional model of the \gaia\ s/c, with a
 one-dimensional sky (a ring of stars), active one-axis attitude
 control, and an environment of random micro-impulses.
 
