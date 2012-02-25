@@ -1,6 +1,6 @@
 '''
 This file is part of the Gaia project.
-Copyright 2012 David W. Hogg
+Copyright 2012 David W. Hogg (NYU).
 '''
 
 import numpy as np
