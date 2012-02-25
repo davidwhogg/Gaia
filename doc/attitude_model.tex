@@ -1,7 +1,74 @@
 \documentclass[12pt]{article}
 
+\newcommand{\project}[1]{\textsl{#1}}
+\newcommand{\gaia}{\project{Gaia}}
+
 \begin{document}
 
-Hello world!
+Here are the points I want to make in this document:
+
+1.~The four-second CCD transit time in \gaia has almost nothing to do
+with the choice of how frequently there should be ``knots'' or control
+points in the data-driven attitude model.  It is true that the mission
+is not really sensitive to attitude issues on much smaller time scales
+than four seconds, but there might be stability on mych longer time
+scales.  This choice of knot spacing obviates that kind of
+(exceedingly valuable) discovery.
+
+2.~Reducing model complexity, even though it reduces model freedom,
+can often \emph{increase} the precision of the results.  The best
+results are obtained with the optimal model complexity, where optimal
+can be strictly defined in this kind of situation.
+
+3.~The knot spacing---or any model-complexity control
+parameter---should be set by an objective process involving either
+optimization or marginalization.  It should not be set by intuition.
+
+4.~There are three (easy) options for dealing with this issue:
+
+4a.~Reduce large chunks of the data with different knot spacings (say
+four seconds, eight, sixteen, and so on), using leave-one-out (or
+really leave-subset-out) cross-validation to assess quality of the
+attitude reconstruction in each case.  This is an low-assumption,
+easy-to-justify, sensible, frequentist, engineering approach.
+
+4b.~Stick with the current choice of four-second knot spacing, but add
+into the least-squares solution a regularization (or prior) term that
+prefers to put each knot at the mid-point (in attitude space) between
+the adjacent knots.  Adjust the strength of this regularization to
+optimize the leave-subset-out cross-validation likelihood or else some
+kind of marginalized likelihood.  Or, in an extreme world, marginalize
+over it (equivalent to marginalizing out a hyperparameter in a
+hierarchical Bayesian model).
+
+4c.~Go to an infinite-dimensional model that has (or really learns)
+spacecraft solid-body physics and a (very large) set of angular
+impulse parameters.  Never actually instantiate or report these
+parameters, but work in an ``always marginalized'' framework in which
+only the (physically motivated) probability distribution function
+(PDF) for the distribution of angular impulses is learned.  That is,
+go hierarchical, learn the hyperparameters, and marginalize out the
+infinite number of angular impulses.
+
+Ideally, in this document, if I cared enough to send the very best, I
+would:
+
+5.~Build a toy one-dimensional model of the \gaia spacecraft, with a
+one-dimensional sky (a ring of stars), active one-axis attitude
+control, and an environment of random micro-impulses.
+
+6.~Build a measurement model that reports noisy transit times for the
+stars in the toy sky and s/c model.  Create many data sets under
+different environment and control assumptions.
+
+7.~Compete the \gaia\ default attitude model plan against the three
+options labeled above as 4a, 4b, and 4c.  Show that all three either
+match or outperform the default \gaia\ plan for all sets of
+assumptions.  Make sure that this is true even when the modeling
+assumptions don't match the simulating assumptions.
+
+8.~Thank Berry Holl and Lennart Lindegren for getting me to think
+about these things, and probably Coryn Bailer-Jones and Anthony Brown
+for keeping me in the loop.
 
 \end{document}
