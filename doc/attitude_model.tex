@@ -81,4 +81,57 @@ assumptions don't match the simulating assumptions.
 about these things, and probably Coryn Bailer-Jones and Anthony Brown
 for keeping me in the loop.
 
+\paragraph{impulse model:}
+Here we build a physical model for the s/c orientation that involves
+angular inertia and random micro-torques.  For simplicity, in what
+follows we will assume a rigid s/c (meaning no variation of the moment
+of inertia with time), but this can be generalized straightforwardly.
+\begin{eqnarray}\displaystyle
+L &=& I \cdot \omega
+\\
+\Delta t_{n-1/2} &\equiv& t_n - t_{n-1}
+\\
+\theta_n &\leftarrow& \theta_{n-1} + I^{-1}\cdot L_{n-1/2}\,\Delta t_{n-1/2}
+\\
+L_{n+1/2} &\leftarrow& L_{n-1/2} + \Delta L_n
+\quad ,
+\end{eqnarray}
+where $L$ is the pseudo-vector angular momentum, $I$ is the moment of
+inertia tensor, $\omega$ is the pseudo-vector angular velocity,
+$\theta_n$ is the orientation of the satellite at time $t_n$, $\Delta
+L_n$ is the total pseudo-vector angular impulse in the vicinity of
+time $t_n$, and the other variables perform a simple leap-frog
+integration scheme.  At every time interval, there is a prior PDF for
+the angular impulses, the simplest possible being a normal $N$
+(Gaussian)
+\begin{eqnarray}\displaystyle
+p(\Delta L_n|\delta) &=& N(\Delta L_n|0,D\,\Delta t_n)
+\\
+\delta &\equiv& \left\{D\right\}
+\\
+\Delta t_n &\equiv& t_{n+1/2} - t_{n-1/2}
+\quad ,
+\end{eqnarray}
+where $\delta$ represents the full list of ``hyperparameters''
+controlling the prior PDF (in this simple case just a variance tensor
+$D$), the normal is given a mean of zero because the s/c is
+constrained to maintain a constant mean spin rate, and the variance of
+the normal is made to grow linearly with time as would be expected for
+something like white noise.  A more complicated model would be a
+mixture of normals as in
+\begin{eqnarray}\displaystyle
+p(\Delta L_n|\delta) &=& \sum_{k=1}^K A_k\,N(\Delta L_n|B_k\,\Delta t_n, D_k\,\Delta t_n)
+\\
+1 &=& \sum_{k=1}^K A_k
+\\
+0 &=& \sum_{k=1}^K A_k\,B_k
+\\
+\delta &\equiv& \left\{A_k, B_k, D_k\right\}_{k=1}^{K}
+\quad ,
+\end{eqnarray}
+where the $A_k$ are scalars, the $B_k$ are peudo-vectors, the $D_k$
+are tensors, the $B_k$ average to zero to maintain s/c scan rate, and
+both the means and the variances of the components rise with time
+(DWH: Does this makes sense?).
+
 \end{document}
