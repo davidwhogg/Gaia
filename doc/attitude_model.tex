@@ -8,14 +8,33 @@
 
 \begin{document}\sloppy\sloppypar\raggedbottom
 
-\section*{Controlling the complexity of the \gaia \\
-          (or any spacecraft) attitude model}
+\section*{Controlling the complexity of the attitude\\
+  model for \gaia\ (or any other spacecraft)}
 
 \noindent
 David W. Hogg (NYU) \\
 2012-02-25
 
-\paragraph{outline:}
+\begin{abstract}
+A data-driven model of spacecraft attitude is a key component of the
+\gaia\ data analysis pipeline.  On-board drift scanning effectively
+removes attitude information on time scales shorter than a few
+seconds, but beyond that it is not known how much freedom must be
+given to the attitude model; a bad choice of model complexity will
+reduce the precision of the final astrometric catalog through either
+over-fitting or under-fitting.  I propose three different
+parameterizations for the model complexity, and two different methods
+for setting the complexity parameter objectively using the data
+themselves.  The simplest model-complexity parameter I propose is the
+time-spacing of a set of knots for an attitude spline and the simplest
+method for setting the complexity I propose is leave-one-out
+cross-validation.  I show with toy simulated \gaia-like experiments
+that all of my proposed methods out-perform any model complexity
+choice established by hand or heuristically; that is, my proposals are
+expected to out-perform the default \gaia\ data pipeline plan.
+\end{abstract}
+
+\section{introduction}
 Here are the points I want to make in this document:
 
 1.~The four-second CCD transit time in \gaia\ has almost nothing to do
@@ -77,14 +96,32 @@ match or outperform the default \gaia\ plan for all sets of
 assumptions.  Make sure that this is true even when the modeling
 assumptions don't match the simulating assumptions.
 
-8.~Thank Berry Holl and Lennart Lindegren for getting me to think
-about these things, and probably Coryn Bailer-Jones and Anthony Brown
-for keeping me in the loop.
+\section{attitude modeling}
 
 \paragraph{generalities:}
+At any s/c time $t$, the \gaia\ s/c has a pseudo-vector orientation
+$\theta$.  The orientation can be thought of here as a pseudo-vector
+because it can be obtained by integrating an angular velocity.  There
+are many time systems in which we can work, but for the purposes of
+simplicity, if it matters, I will always mean ``s/c time'' when I
+write ``time''.  As the \gaia\ fields of view sweep across the sky,
+the s/c produces (for my purposes) a set of $N$ transit time
+measurements $t_n$ as the detected stars cross some fiducial reference
+line in the focal plane.  In reality things are far more complicated
+than this, but I will ignore the complexity because it doesn't change
+the overall story.
+
+In particular, the \gaia\ data stream includes both transit times and
+across-scan positions (and some PSF information).  However, Lindegren
+teaches us (DWH: citation) that most of the information about the sky
+and s/c nuisance parameters comes from the transit times.  So the
+likelihood given below---which treats the transit times $t_n$ as the
+only data---is an approximation, but a good one, especially for my
+purposes.
+
 Under the assumption of normally distributed noise contributions to
-the timing measurements $t_n$ with known variances $\sigma^2_n$, the
-likelihood is something like
+the transit time measurements $t_n$ with known variances $\sigma^2_n$,
+the likelihood is something like
 \begin{eqnarray}\displaystyle
 p({t_n}_{n=1}^N|\alpha,\gamma,\Theta) &=& \prod_{n=1}^N N(t_n|\tilde{t}_n, \sigma^2_n)
 \\
@@ -101,15 +138,27 @@ where $\alpha$ is the full list of sky parameters (the celestial
 position, parallax, and proper motion of every star), $\gamma$ is the
 the full list of global parameters relating to aberration, general
 relativity, s/c orbit, solar-system dynamics, and so on, $\Theta$ is
-the full list of angular positions $\theta_k$ or attitudes at each
-knot $k$, the $\tilde{t}_n$ are the predicted times given the sky,
-global, and angular parameters, the $\sigma^2_n$ are the (presumed
-known and correct) noise variances on the $t_n$, the assumption of
-independence translates to the product in the likelihood or the sum
-$\chi^2$ in the log likelihood, and $Q$ is a constant of no importance
-in what follows.
+the full list of pseudo-vector angular positions $\theta_k$ or
+attitudes at each knot $k$, the $\tilde{t}_n$ are the predicted times
+given the sky, global, and angular parameters, the $\sigma^2_n$ are
+the (presumed known and correct) noise variances on the $t_n$, the
+assumption of independence translates to the product in the likelihood
+or the sum $\chi^2$ in the log likelihood, and $Q$ is a constant of no
+importance in what follows.
 
 \paragraph{cross-validation:}
+The idea in cross-validation is to ``train'' or optimize the model on
+most of the data, leaving some out, and then ``test'' or evaluate the
+model by having the optimized model predict the left-out data.  The
+standard approach in a large data set like that of \gaia\ would be to
+assign a random integer $m$ with $1\leq m\leq M$ to every observation
+(every transit time $t_n$) and thereby make $M$ ``test'' subsets and
+$M$ corresponding ``leave-one-out'' complementary training subsets.
+In a full round of cross-validation, the model is optimized to each of
+the $M$ leave-one-out training subsets and each of these $M$ optimized
+models is used to predict the corresponding left-out test subset.
+
+(DWH: Equations; notation is the big issue here)
 
 \paragraph{regularization model:}
 Here we treat the grid of knots $k$ as fixed at times $t_k$---that is
@@ -124,14 +173,17 @@ to half-way between the attitude angles of the adjacent times:
 where $\epsilon$ is a regularization parameters setting the influence
 of the regularization.  Minimization of $\chi^2_\epsilon$ is
 equivalent to maximization of a posterior probability proportional to
-the likelihood times a prior that is normal in the angular
-displacements $\theta_k$ away from the means of the adjacent angles
-$(1/2)\,[\theta_{k+1}+\theta_{k-1}]$.
+the likelihood times a prior that is normal in the pseudo-vector
+angular displacements $\theta_k$ away from the means of the adjacent
+angles $(1/2)\,[\theta_{k+1}+\theta_{k-1}]$.
 
-(DWH: How is that we can think of $\epsilon$ as a model-complexity
+(DWH: How is it that we can think of $\epsilon$ as a model-complexity
 parameter?)
 
 (DWH: Set $\epsilon$ by cross-validation again.)
+
+(DWH: What would it look like to \emph{marginalize out} the
+regularization parameter $\epsilon$.  Almost certainly not worth it.)
 
 \paragraph{impulse model:}
 Here we build a physical model for the s/c orientation that involves
@@ -188,5 +240,25 @@ with time (DWH: Does this makes sense?).
 
 (DWH: Note about working at the \emph{observed} times $t_n$ rather
 than on some other grid.)
+
+\section{toy model}
+
+(DWH: sky is a poisson sample of S stars)
+
+(DWH: global parameters are null:  No SR, no GR, nothing.)
+
+(DWH: attitude is affected by four things: steady torque, white noise,
+periodic s/c control impulses, and random impulses.)
+
+\section{experiments and results}
+
+\section{discussion}
+
+\paragraph{acknowledgments:}
+It is a pleasure to thank Berry Holl (Lund) and Lennart Lindegren
+(Lund) for getting me to think about these things, and Coryn
+Bailer-Jones (MPIA), Jo Bovy (IAS), Anthony Brown (Leiden), Iain
+Murray (Edinburgh), and Sam Roweis (deceased) for valuable
+discussions.
 
 \end{document}
