@@ -81,6 +81,58 @@ assumptions don't match the simulating assumptions.
 about these things, and probably Coryn Bailer-Jones and Anthony Brown
 for keeping me in the loop.
 
+\paragraph{generalities:}
+Under the assumption of normally distributed noise contributions to
+the timing measurements $t_n$ with known variances $\sigma^2_n$, the
+likelihood is something like
+\begin{eqnarray}\displaystyle
+p({t_n}_{n=1}^N|\alpha,\gamma,\Theta) &=& \prod_{n=1}^N N(t_n|\tilde{t}_n, \sigma^2_n)
+\\
+\Theta &\equiv& \left\{\theta_k \right\}_{k=1}^K
+\\
+\ln p({t_n}_{n=1}^N|\alpha,\gamma,\theta) &=& Q + \frac{1}{2}\,\chi^2
+\\
+\chi^2 &\equiv& \sum_n \chi^2_n
+\\
+\chi^2_n &\equiv& \frac{[t_n - \tilde{t}_n]^2}{\sigma^2_n}
+\quad ,
+\end{eqnarray}
+where $\alpha$ is the full list of sky parameters (the celestial
+position, parallax, and proper motion of every star), $\gamma$ is the
+the full list of global parameters relating to aberration, general
+relativity, s/c orbit, solar-system dynamics, and so on, $\Theta$ is
+the full list of angular positions $\theta_k$ or attitudes at each
+knot $k$, the $\tilde{t}_n$ are the predicted times given the sky,
+global, and angular parameters, the $\sigma^2_n$ are the (presumed
+known and correct) noise variances on the $t_n$, the assumption of
+independence translates to the product in the likelihood or the sum
+$\chi^2$ in the log likelihood, and $Q$ is a constant of no importance
+in what follows.
+
+\paragraph{cross-validation:}
+
+\paragraph{regularization model:}
+Here we treat the grid of knots $k$ as fixed at times $t_k$---that is
+we fix the number of knots $K$ and the knot spacing---but we instead
+affect the model complexity by adding to the $\chi^2$ term a
+regularization that prefers attitude angles $\theta_k$ that lie close
+to half-way between the attitude angles of the adjacent times:
+\begin{eqnarray}\displaystyle
+\chi^2_\epsilon &\equiv& \chi^2 + \epsilon\,\sum_{k=2}^{K-1} \left[\theta_k - \frac{1}{2}\,[\theta_{k+1} + \theta_{k-1}]\right]^2
+\quad ,
+\end{eqnarray}
+where $\epsilon$ is a regularization parameters setting the influence
+of the regularization.  Minimization of $\chi^2_\epsilon$ is
+equivalent to maximization of a posterior probability proportional to
+the likelihood times a prior that is normal in the angular
+displacements $\theta_k$ away from the means of the adjacent angles
+$(1/2)\,[\theta_{k+1}+\theta_{k-1}]$.
+
+(DWH: How is that we can think of $\epsilon$ as a model-complexity
+parameter?)
+
+(DWH: Set $\epsilon$ by cross-validation again.)
+
 \paragraph{impulse model:}
 Here we build a physical model for the s/c orientation that involves
 angular inertia and random micro-torques.  For simplicity, in what
@@ -120,18 +172,21 @@ the normal is made to grow linearly with time as would be expected for
 something like white noise.  A more complicated model would be a
 mixture of normals as in
 \begin{eqnarray}\displaystyle
-p(\Delta L_n|\delta) &=& \sum_{k=1}^K A_k\,N(\Delta L_n|B_k\,\Delta t_n, D_k\,\Delta t_n)
+p(\Delta L_n|\delta) &=& \sum_{\ell=1}^L A_\ell\,N(\Delta L_n|B_\ell\,\Delta t_n, D_\ell\,\Delta t_n)
 \\
-1 &=& \sum_{k=1}^K A_k
+1 &=& \sum_{\ell=1}^L A_\ell
 \\
-0 &=& \sum_{k=1}^K A_k\,B_k
+0 &=& \sum_{\ell=1}^L A_\ell\,B_\ell
 \\
-\delta &\equiv& \left\{A_k, B_k, D_k\right\}_{k=1}^{K}
+\delta &\equiv& \left\{A_\ell, B_\ell, D_\ell\right\}_{\ell=1}^L
 \quad ,
 \end{eqnarray}
-where the $A_k$ are scalars, the $B_k$ are peudo-vectors, the $D_k$
-are tensors, the $B_k$ average to zero to maintain s/c scan rate, and
-both the means and the variances of the components rise with time
-(DWH: Does this makes sense?).
+where the $A_\ell$ are scalars, the $B_\ell$ are peudo-vectors, the
+$D_\ell$ are tensors, the $B_\ell$ average to zero to maintain s/c
+scan rate, and both the means and the variances of the components rise
+with time (DWH: Does this makes sense?).
+
+(DWH: Note about working at the \emph{observed} times $t_n$ rather
+than on some other grid.)
 
 \end{document}
