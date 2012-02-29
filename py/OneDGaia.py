@@ -41,6 +41,18 @@ class Sky():
         '''
         return self.positions
 
+    def plot_positions(self):
+        '''
+        plot_positions():
+
+        Make a plot of the sky--sort of.
+        '''
+        plt.plot(self.get_positions(), 'k.', alpha=0.25)
+        plt.xlabel(r'star ID number')
+        plt.ylabel(r'star position $\theta$')
+        plt.ylim(0., 2. * np.pi)
+        return None
+
 class Spacecraft():
     '''
     class Spacecraft:
@@ -56,11 +68,13 @@ class Spacecraft():
 
     self.I, self.Iinverse: Moment of inertia information.
 
-    self.dt, self.sigma_t, self.scan_time: The three important short
-    times in the problem: The spacing of time grid for attitude
-    recording, the noise root-variance for time measurements, and the
-    time over which the transit times are integrated or measured or
-    averaged (the drift-scan time across the CCD).
+    self.dt, self.sigma_t, self.scan_time, self.tau: The four
+    important short time scales in the problem: The spacing of time
+    grid for attitude recording, the noise root-variance for time
+    measurements, the time over which the transit times are integrated
+    or measured or averaged (the drift-scan time across the CCD), and
+    the time constant for the exponential restoring torque from the
+    s/c attitude control.
 
     self.times: A grid of times on which the angular momentum and
     position is tracked.
@@ -74,33 +88,35 @@ class Spacecraft():
         self.dt = 0.0001 # magic number; about 0.0057 deg (21 arcsec) at unit angular velocity
         self.sigma_t = 5.e-10 # magic number; about 100 micro-arcsec at unit angular velocity
         self.scan_time = 0.001 # magic number; about 0.057 deg at unit angular velocity
-        self.times = np.arange(0., 500., self.dt) # magic number; about 80 rotations?
+        self.tau = 0.1 # magic number; much longer than dt for interesting dynamics
         self.L0 = 1.
         self.position0 = 0.
-        self.dLs = None
+        self.times = np.arange(0., 500., self.dt) # magic number; about 80 rotations?
         self.positions = None
-        self.apply_torques(amp)
-        self.compute_positions()
+        self.Ls = None
+        self.dLs = np.zeros_like(self.times)
+        self.apply_random_torques(amp)
         return None
 
-    def apply_torques(self, amp):
+    def apply_random_torques(self, amp):
         '''
-        apply_torques(amp):
+        apply_random_torques(amp):
 
-        Apply random torques to the spacecraft.  Set angular momenta
-        self.Ls and un-set the self.positions (so they need to be
-        recomputed).
+        Apply random angular impulses to the spacecraft.  Set angular
+        momenta self.Ls and un-set the self.positions (so they need to
+        be recomputed).
 
-        amp: amplitude of Gaussian random angular impulses to apply,
-        one per time
+        amp: amplitude of Gaussian random noise; note square-root of
+        self.dt in what we are doing.
         '''
-        self.dLs = amp * np.random.normal(size=(self.times.size))
+        self.dLs += amp * np.sqrt(self.dt) * np.random.normal(size=(self.times.size))
+        self.Ls = None
         self.positions = None
         return None
 
     def get_times(self):
         '''
-        get_Ls():
+        get_times():
 
         Return the times.
         '''
@@ -108,7 +124,7 @@ class Spacecraft():
 
     def get_halfway_times(self):
         '''
-        get_Ls():
+        get_halfway_times():
 
         Return the half-point times corresponding to the get_Ls()
         output.
@@ -119,22 +135,20 @@ class Spacecraft():
         '''
         get_Ls():
 
-        Integrate and return the angular momenta.  Technically, these
-        are defined on the half-way points between the self.times,
-        hence the -1 oddity.
-        '''
-        return self.L0 + (np.cumsum(self.dLs))[0:-1]
+        Return (or compute and return) the angular momenta self.Ls at
+        the self.times.  Technically, these self.Ls are defined on the
+        half-way points between the self.times, hence
+        len(self.get_Ls()) == len(self.times)-1.
 
-    def compute_positions(self):
+        Note craziness induced by the the s/c restoring torque system.
         '''
-        compute_positions(start_position):
-
-        Leapfrog-integrate the angular momentum and angular impulses
-        to set the self.positions.  This returns nothing; it just
-        *computes* the positions.
-        '''
-        self.positions = np.append(self.position0, self.position0 + np.cumsum(self.Iinverse * self.get_Ls() * self.dt))
-        return None
+        if self.Ls is None:
+            nLs = len(self.times) - 1
+            self.Ls = np.zeros(nLs)
+            self.Ls[0] = self.L0 + self.dLs[0]
+            for i in range(1, nLs):
+                self.Ls[i] = self.Ls[i-1] + self.dLs[i] - (self.dt / self.tau) * (self.Ls[i-1] - self.L0)
+        return self.Ls
 
     def get_positions(self):
         '''
@@ -142,9 +156,13 @@ class Spacecraft():
 
         Return (or compute and return, if necessary) the angular
         positions self.positions at the times self.times.
+
+        When computing, leapfrog-integrate the angular momentum and
+        angular impulses.
+
         '''
         if self.positions is None:
-            self.compute_positions()
+            self.positions = np.append(self.position0, self.position0 + np.cumsum(self.Iinverse * self.get_Ls() * self.dt))
         return self.positions
 
     def get_transit_times(self, sky):
@@ -171,6 +189,38 @@ class Spacecraft():
         tt = self.get_transit_times(sky)
         return tt + self.sigma_t * np.random.normal(size=tt.shape)
 
+    def plot_Ls(self):
+        '''
+        plot_Ls():
+
+        Make a useful plot of the s/c angular momentum vs time.
+        '''
+        for p in [1, 2]:
+            plt.subplot(1,2,p)
+            plt.plot(self.get_halfway_times(), self.get_Ls())
+            plt.xlabel(r'time $t$')
+            plt.ylabel(r'angular momentum $L$')
+            if p == 1:
+                plt.xlim(0., 10. * self.tau)
+        return None
+
+    def plot_positions(self):
+        '''
+        plot_Ls():
+
+        Make a useful plot of the s/c position vs time.
+        '''
+        for p in [1, 2]:
+            plt.subplot(1,2,p)
+            plt.plot(self.get_times(), self.get_positions())
+            plt.xlabel(r'time $t$')
+            plt.ylabel(r'position $\theta$')
+            if p == 1:
+                plt.xlim(0., 10. * self.tau)
+                foo, bar = plt.ylim()
+                plt.ylim(foo, bar * 10. * self.tau / self.times[-1])
+        return None
+
 def main():
     '''
     main function, duh
@@ -178,18 +228,14 @@ def main():
     np.random.seed(42)
     sk = Sky(100000)
     plt.clf()
-    plt.plot(sk.get_positions(), 'k.', alpha=0.25)
+    sk.plot_positions()
     plt.savefig('sky.png')
-    sc = Spacecraft(0.0001)
+    sc = Spacecraft(0.1)
     plt.clf()
-    plt.plot(sc.get_halfway_times(), sc.get_Ls())
-    plt.xlabel(r'time $t$')
-    plt.ylabel(r'angular momentum $L$')
+    sc.plot_Ls()
     plt.savefig('Ls.png')
     plt.clf()
-    plt.plot(sc.get_times(), sc.get_positions())
-    plt.xlabel(r'time $t$')
-    plt.ylabel(r'position $\theta$')
+    sc.plot_positions()
     plt.savefig('positions.png')
     return None
 
