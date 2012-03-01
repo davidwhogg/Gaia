@@ -5,8 +5,7 @@ Copyright 2012 David W. Hogg (NYU).
 bugs:
 -----
 - get_transit_times() function not yet written!
-- needs to average over the observing interval!
-- error model not yet written!
+- ought to average over the observing interval!
 '''
 
 if __name__ == '__main__':
@@ -35,11 +34,20 @@ class Sky():
 
     def get_positions(self):
         '''
-        get positions():
+        get_positions():
 
         Return the positions of the M stars.
         '''
         return self.positions
+
+    def get_vectors(self):
+        '''
+        get_vectors():
+
+        Return the two-d vectors corresponding to the M star
+        positions.
+        '''
+        return np.vstack((np.cos(self.positions), np.sin(self.positions))).T
 
     def plot_positions(self):
         '''
@@ -68,13 +76,11 @@ class Spacecraft():
 
     self.I, self.Iinverse: Moment of inertia information.
 
-    self.dt, self.sigma_t, self.scan_time, self.tau: The four
-    important short time scales in the problem: The spacing of time
-    grid for attitude recording, the noise root-variance for time
-    measurements, the time over which the transit times are integrated
-    or measured or averaged (the drift-scan time across the CCD), and
-    the time constant for the exponential restoring torque from the
-    s/c attitude control.
+    self.dt, self.sigma_t, self.tau: The three important short time
+    scales in the problem: The spacing of time grid for attitude
+    recording, the noise root-variance for time measurements, and the
+    time constant for the exponential restoring torque from the s/c
+    attitude control.
 
     self.times: A grid of times on which the angular momentum and
     position is tracked.
@@ -85,9 +91,8 @@ class Spacecraft():
     def __init__(self, amp):
         self.I = 1.
         self.Iinverse = 1.
-        self.dt = 0.0001 # magic number; about 0.0057 deg (21 arcsec) at unit angular velocity
+        self.dt = 0.001 # magic number; about 0.057 deg (210 arcsec) at unit angular velocity
         self.sigma_t = 5.e-10 # magic number; about 100 micro-arcsec at unit angular velocity
-        self.scan_time = 0.001 # magic number; about 0.057 deg at unit angular velocity
         self.tau = 0.1 # magic number; much longer than dt for interesting dynamics
         self.L0 = 1.
         self.position0 = 0.
@@ -143,11 +148,13 @@ class Spacecraft():
         Note craziness induced by the the s/c restoring torque system.
         '''
         if self.Ls is None:
+            print 'get_Ls: computing Ls...'
             nLs = len(self.times) - 1
             self.Ls = np.zeros(nLs)
             self.Ls[0] = self.L0 + self.dLs[0]
             for i in range(1, nLs):
                 self.Ls[i] = self.Ls[i-1] + self.dLs[i] - (self.dt / self.tau) * (self.Ls[i-1] - self.L0)
+            print 'get_Ls: ...done'
         return self.Ls
 
     def get_positions(self):
@@ -162,8 +169,29 @@ class Spacecraft():
 
         '''
         if self.positions is None:
+            print 'get_positions: computing positions...'
             self.positions = np.append(self.position0, self.position0 + np.cumsum(self.Iinverse * self.get_Ls() * self.dt))
+            print 'get_positions: ...done'
         return self.positions
+
+    def get_vectors(self):
+        '''
+        get_vectors():
+
+        Return the two-d vectors corresponding to the self.positions.
+        '''
+        p = self.get_positions()
+        return np.vstack((np.cos(p), np.sin(p))).T
+
+    def get_transverse_vectors(self):
+        '''
+        get_vectors():
+
+        Return the perpendicular two-d vectors orthogonal to those
+        returned by get_vectors().
+        '''
+        p = self.get_positions()
+        return np.vstack((np.sin(p), -np.cos(p))).T
 
     def get_transit_times(self, sky):
         '''
@@ -175,8 +203,31 @@ class Spacecraft():
         time window, but that no noise has been added yet.
 
         sky: Input Sky object with stars in it.
+
+        output: Transit times and star IDs.
         '''
-        return transit_times
+        print 'get_transit_times: computing transit times...'
+        star_vectors = sky.get_vectors()
+        sc_vectors = self.get_vectors()
+        sc_transverse_vectors = self.get_transverse_vectors()
+        d1 = np.dot(star_vectors, sc_vectors[0])
+        dp1 = np.dot(star_vectors, sc_transverse_vectors[0])
+        transit_times = []
+        star_ids = []
+        for i in range(1, len(sc_transverse_vectors)):
+            if (i % 1024) == 0:
+                print i, '/', len(sc_transverse_vectors), ':', len(transit_times), len(star_ids)
+            d2 = np.dot(star_vectors, sc_vectors[i])
+            dp2 = np.dot(star_vectors, sc_transverse_vectors[i])
+            I = np.flatnonzero((d1 > 0.) * (d2 > 0.) * (dp1 < 0.) * (dp2 > 0))
+            if len(I) > 0:
+                newtt = self.times[i-1] + self.dt * (0.5 + 0.5 * (dp1[I] + dp2[I]) / (dp1[I] - dp2[I]))
+                star_ids = np.append(star_ids, I)
+                transit_times = np.append(transit_times, newtt)
+            d1 = 1. * d2
+            dp1 = 1. * dp2
+        print 'get_transit_times: ...done'
+        return transit_times, star_ids
 
     def get_reported_transit_times(self, sky):
         '''
@@ -185,9 +236,11 @@ class Spacecraft():
         Same as get_transit_times() but also add Gaussian
         observational noise with an amplitude (root variance) set by
         the internal variable self.sigma_t.
+
+        output: Transit times and star IDs.
         '''
-        tt = self.get_transit_times(sky)
-        return tt + self.sigma_t * np.random.normal(size=tt.shape)
+        tts, ids = self.get_transit_times(sky)
+        return (tts + self.sigma_t * np.random.normal(size=tts.shape)), ids
 
     def plot_Ls(self):
         '''
@@ -226,11 +279,12 @@ def main():
     main function, duh
     '''
     np.random.seed(42)
-    sk = Sky(100000)
+    thesky = Sky(100)
     plt.clf()
-    sk.plot_positions()
+    thesky.plot_positions()
     plt.savefig('sky.png')
     sc = Spacecraft(0.1)
+    tt = sc.get_reported_transit_times(thesky)
     plt.clf()
     sc.plot_Ls()
     plt.savefig('Ls.png')
