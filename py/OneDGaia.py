@@ -67,18 +67,61 @@ class Sky():
         plt.ylim(0., 2. * np.pi)
         return None
 
+class TimeCatalog():
+    '''
+    ## class `TimeCatalog`:
+
+    A class for holding, plotting, and manipulating the OneDGaia
+    transit-time catalog, which is a set of star IDs, a set of transit
+    times, and a set of noise root-variances.  This catalog is *not*
+    to be confused with the `AstrometricCatalog`, which is the output
+    of fitting a model to this `TimeCatalog`.
+
+    # initialization input:
+
+    * `IDs`: list of star IDs, with many repeats (we hope)
+
+    * `FOVs`: list of field-of-view IDs (0 or 1)
+
+    * `ts`: list of transit times
+
+    * `sigmas`: list of uncertainty (noise) root-variances
+    '''
+    def __init__(self, IDs, FOVs, ts, sigmas):
+        self.IDs = IDs
+        self.FOVs = FOVs
+        self.transit_times = ts
+        self.sigmas = sigmas
+        return None
+
+class AstrometricCatalog():
+    '''
+    ## class `AstrometricCatalog`:
+
+    A class for holding, plotting, and manipulating the OneDGaia final
+    best-fit astrometric catalog, which is a set of star IDs, a set of
+    one-dimensional angular positions, plus noise and time-derivative
+    information.
+
+    # bugs:
+
+    * not yet written
+    '''
+    def __init__(self):
+        return None
+
 class Spacecraft():
     '''
-    class `Spacecraft`:
+    ## class `Spacecraft`:
 
     A class for holding the physical attitude information about a
     toy, one-dimensional, spinning spacecraft.
 
-    initialization input:
+    # initialization input:
 
     * `amp`: Amplitude (RTFSC) for random torque impulses.
 
-    internals:
+    # internals:
 
     * `self.I`, `self.Iinverse`: Moment of inertia information.
 
@@ -226,7 +269,7 @@ class Spacecraft():
 
         # output:
 
-        * Transit times and star IDs.
+        * Transit times, star IDs, and field-of-view IDs (0 or 1)
 
         # bugs:
 
@@ -240,6 +283,7 @@ class Spacecraft():
         old = np.array([np.dot(star_vectors, sc_vectors[0,j,:]) for j in range(4)])
         transit_times = []
         star_ids = []
+        fovs = []
         for i in range(1, len(sc_vectors)):
             if (i % 1024) == 0:
                 print i, '/', len(sc_vectors), ':', len(transit_times), len(star_ids)
@@ -249,10 +293,11 @@ class Spacecraft():
                 if len(I) > 0:
                     newtt = self.times[i-1] + self.dt * (0.5 + 0.5 * (old[j + 2, I] + new[j + 2, I]) / (old[j + 2, I] - new[j + 2, I]))
                     star_ids = np.append(star_ids, I)
+                    fovs = np.append(fovs, j + np.zeros_like(I))
                     transit_times = np.append(transit_times, newtt)
             old = 1. * new
         print 'get_transit_times: ...done'
-        return transit_times, star_ids
+        return transit_times, star_ids, fovs
 
     def get_reported_transit_times(self, sky):
         '''
@@ -268,10 +313,20 @@ class Spacecraft():
 
         # output:
 
-        * Transit times and star IDs.
+        * Transit times, star IDs, and field-of-view IDs (0 or 1)
         '''
-        tts, ids = self.get_transit_times(sky)
-        return (tts + self.sigma_t * np.random.normal(size=tts.shape)), ids
+        tts, ids, fovs = self.get_transit_times(sky)
+        return (tts + self.sigma_t * np.random.normal(size=tts.shape)), ids, fovs
+
+    def get_transit_time_catalog(self, sky):
+        '''
+        ## `get_transit_time_catalog()`:
+
+        Return the `get_reported_transit_times(sky)` in the form of a
+        `TimeCatalog` object.
+        '''
+        tts, ids, fovs = self.get_reported_transit_times(sky)
+        return TimeCatalog(ids, fovs, tts, self.sigma_t * np.ones_like(tts))
 
     def plot_Ls(self):
         '''
@@ -315,13 +370,27 @@ def main():
     thesky.plot_positions()
     plt.savefig('sky.png')
     sc = Spacecraft(0.1)
-    tt = sc.get_reported_transit_times(thesky)
     plt.clf()
     sc.plot_Ls()
     plt.savefig('Ls.png')
     plt.clf()
     sc.plot_positions()
     plt.savefig('positions.png')
+    time_catalog = sc.get_transit_time_catalog(thesky)
+    plt.clf()
+    I17 = np.flatnonzero(time_catalog.IDs == 17)
+    obsIDs = np.arange(len(I17))
+    tts = time_catalog.transit_times[I17]
+    fovlabels = ["%1d" % i for i in time_catalog.FOVs[I17]]
+    print obsIDs
+    print tts
+    print fovlabels
+    plt.plot(obsIDs, tts, 'ko')
+    for x, y, t in zip(obsIDs, tts, fovlabels):
+        plt.text(x, y, t)
+    plt.xlabel('observation number for star 17')
+    plt.ylabel('transit time')
+    plt.savefig('TimeCatalog.png')
     return None
 
 if __name__ == '__main__':
