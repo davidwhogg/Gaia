@@ -2,10 +2,16 @@
 This file is part of the Gaia project.
 Copyright 2012 David W. Hogg (NYU).
 
-bugs:
------
-- get_transit_times() function not yet written!
-- ought to average over the observing interval!
+### OneDGaia
+
+A one-dimensional fake sky with a one-dimensional Gaia-like
+astrometric mission for intuition building.
+
+# bugs
+
+* Is the fundamental angle correct?
+* get_transit_times() function very slow.
+* Ought to average transit times over an observing interval.
 '''
 
 if __name__ == '__main__':
@@ -19,13 +25,13 @@ import pylab as plt
 
 class Sky():
     '''
-    class Sky:
+    ## class `Sky`:
     
     A class for holding the stellar positions on a one-dimensional sky.
 
-    Initialization inputs:
+    # initialization input:
 
-    M:  number of stars to make
+    * `M`:  number of stars to make
     '''
     def __init__(self, M):
         self.M = M
@@ -34,7 +40,7 @@ class Sky():
 
     def get_positions(self):
         '''
-        get_positions():
+        ## `get_positions()`:
 
         Return the positions of the M stars.
         '''
@@ -42,7 +48,7 @@ class Sky():
 
     def get_vectors(self):
         '''
-        get_vectors():
+        ## `get_vectors()`:
 
         Return the two-d vectors corresponding to the M star
         positions.
@@ -51,7 +57,7 @@ class Sky():
 
     def plot_positions(self):
         '''
-        plot_positions():
+        ## `plot_positions()`:
 
         Make a plot of the sky--sort of.
         '''
@@ -63,34 +69,35 @@ class Sky():
 
 class Spacecraft():
     '''
-    class Spacecraft:
+    class `Spacecraft`:
 
     A class for holding the physical attitude information about a
     toy, one-dimensional, spinning spacecraft.
 
-    Initialization inputs:
+    initialization input:
 
-    amp: Amplitude (RTFSC) for random torque impulses.
+    * `amp`: Amplitude (RTFSC) for random torque impulses.
 
-    Internals:
+    internals:
 
-    self.I, self.Iinverse: Moment of inertia information.
+    * `self.I`, `self.Iinverse`: Moment of inertia information.
 
-    self.dt, self.sigma_t, self.tau: The three important short time
-    scales in the problem: The spacing of time grid for attitude
+    * `self.dt`, `self.sigma_t`, `self.tau`: The three important short
+    time scales in the problem: The spacing of time grid for attitude
     recording, the noise root-variance for time measurements, and the
     time constant for the exponential restoring torque from the s/c
     attitude control.
 
-    self.times: A grid of times on which the angular momentum and
+    * `self.times`: A grid of times on which the angular momentum and
     position is tracked.
 
-    self.dLs, self.positions: Angular momentum increments (impulses)
-    and positions at the self.times.
+    * `self.dLs`, `self.positions`: Angular momentum increments
+    (impulses) and angular positions at the `self.times`.
     '''
     def __init__(self, amp):
         self.I = 1.
         self.Iinverse = 1.
+        self.fundamental_angle = np.deg2rad(106.5) # magic number; angle between two telescope FOVs
         self.dt = 0.001 # magic number; about 0.057 deg (210 arcsec) at unit angular velocity
         self.sigma_t = 5.e-10 # magic number; about 100 micro-arcsec at unit angular velocity
         self.tau = 0.1 # magic number; much longer than dt for interesting dynamics
@@ -105,14 +112,17 @@ class Spacecraft():
 
     def apply_random_torques(self, amp):
         '''
-        apply_random_torques(amp):
+        ## `apply_random_torques(amp)`:
 
         Apply random angular impulses to the spacecraft.  Set angular
-        momenta self.Ls and un-set the self.positions (so they need to
-        be recomputed).
+        momentum impulses `self.dLs` and un-set the `self.Ls` and
+        `self.positions` (so they need to be recomputed).
 
-        amp: amplitude of Gaussian random noise; note square-root of
-        self.dt in what we are doing.
+        # input:
+
+        * `amp`: amplitude of Gaussian random noise.  Note square-root
+        of `self.dt` in what we are doing; this amplitude is like the
+        square-root of a variance per time.
         '''
         self.dLs += amp * np.sqrt(self.dt) * np.random.normal(size=(self.times.size))
         self.Ls = None
@@ -121,29 +131,30 @@ class Spacecraft():
 
     def get_times(self):
         '''
-        get_times():
+        ## `get_times()`:
 
-        Return the times.
+        Return the times at which the angular positions
+        `self.positions` are defined.
         '''
         return self.times
 
     def get_halfway_times(self):
         '''
-        get_halfway_times():
+        ## `get_halfway_times()`:
 
-        Return the half-point times corresponding to the get_Ls()
+        Return the half-point times corresponding to the `get_Ls()`
         output.
         '''
         return self.times[0:-1] + 0.5 * self.dt
 
     def get_Ls(self):
         '''
-        get_Ls():
+        ## `get_Ls()`:
 
-        Return (or compute and return) the angular momenta self.Ls at
-        the self.times.  Technically, these self.Ls are defined on the
-        half-way points between the self.times, hence
-        len(self.get_Ls()) == len(self.times)-1.
+        Return (or compute and return) the angular momenta `self.Ls`
+        at the `self.times`.  Technically, these `self.Ls` are defined
+        on the half-way points between the `self.times`, hence
+        `len(self.get_Ls()) == len(self.times)-1`.
 
         Note craziness induced by the the s/c restoring torque system.
         '''
@@ -159,10 +170,10 @@ class Spacecraft():
 
     def get_positions(self):
         '''
-        get_positions():
+        ## `get_positions()`:
 
         Return (or compute and return, if necessary) the angular
-        positions self.positions at the times self.times.
+        positions `self.positions` at the times `self.times`.
 
         When computing, leapfrog-integrate the angular momentum and
         angular impulses.
@@ -176,35 +187,44 @@ class Spacecraft():
 
     def get_vectors(self):
         '''
-        get_vectors():
+        ## `get_vectors()`:
 
-        Return the two-d vectors corresponding to the self.positions.
-        '''
-        p = self.get_positions()
-        return np.vstack((np.cos(p), np.sin(p))).T
+        Return the two-d vectors corresponding to the
+        `self.positions`.  The vectors are returned in the shape
+        `[len(self.positions),4,2]` where the zeroth index is over the
+        `self.positions`, the first index is over the four key vectors
+        corresponding to one position (see below), and the third index
+        is over the two dimensions (of the two-dimensional vectors).
 
-    def get_transverse_vectors(self):
+        The four vectors are:
+        * `v[:,0,:]`: vector pointing towards the zeroth FOV
+        * `v[:,1,:]`: vector pointing towards the first FOV
+        * `v[:,2,:]`: vector perpendicular to `v[:,0,:]`
+        * `v[:,3,:]`: vector perpendicular to `v[:,1,:]`
         '''
-        get_vectors():
-
-        Return the perpendicular two-d vectors orthogonal to those
-        returned by get_vectors().
-        '''
-        p = self.get_positions()
-        return np.vstack((np.sin(p), -np.cos(p))).T
+        v = np.zeros((len(self.positions),4,2))
+        v[:,0,:] = np.vstack((np.cos(p),  np.sin(p))).T
+        v[:,1,:] = np.vstack((np.cos(p - self.fundamental_angle),  np.sin(p - self.fundamental_angle))).T
+        v[:,2,:] = np.vstack((np.sin(p), -np.cos(p))).T
+        v[:,3,:] = np.vstack((np.sin(p - self.fundamental_angle), -np.cos(p - self.fundamental_angle))).T
+        return v
 
     def get_transit_times(self, sky):
         '''
-        get_transit_times(sky):
+        ## `get_transit_times(sky)`:
 
         Return the full set of transit times for the full mission on
         an input Sky object containing stars.  Note that the transit
         times are *averages* over an internal observing drift-scan
         time window, but that no noise has been added yet.
 
-        sky: Input Sky object with stars in it.
+        # input:
 
-        output: Transit times and star IDs.
+        * `sky`: Input `Sky` object with stars in it.
+
+        # output:
+
+        * Transit times and star IDs.
         '''
         print 'get_transit_times: computing transit times...'
         star_vectors = sky.get_vectors()
@@ -231,20 +251,26 @@ class Spacecraft():
 
     def get_reported_transit_times(self, sky):
         '''
-        get_reported_transit_times():
+        ## `get_reported_transit_times()`:
 
-        Same as get_transit_times() but also add Gaussian
+        Same as `get_transit_times()` but also add Gaussian
         observational noise with an amplitude (root variance) set by
-        the internal variable self.sigma_t.
+        the internal variable `self.sigma_t`.
 
-        output: Transit times and star IDs.
+        # input:
+
+        * `sky`: input `Sky` object with stars in it
+
+        # output:
+
+        * Transit times and star IDs.
         '''
         tts, ids = self.get_transit_times(sky)
         return (tts + self.sigma_t * np.random.normal(size=tts.shape)), ids
 
     def plot_Ls(self):
         '''
-        plot_Ls():
+        ## `plot_Ls()`:
 
         Make a useful plot of the s/c angular momentum vs time.
         '''
@@ -259,7 +285,7 @@ class Spacecraft():
 
     def plot_positions(self):
         '''
-        plot_Ls():
+        ## `plot_Ls()`:
 
         Make a useful plot of the s/c position vs time.
         '''
