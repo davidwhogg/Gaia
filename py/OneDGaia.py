@@ -103,7 +103,7 @@ class Spacecraft():
         self.tau = 0.1 # magic number; much longer than dt for interesting dynamics
         self.L0 = 1.
         self.position0 = 0.
-        self.times = np.arange(0., 500., self.dt) # magic number; about 80 rotations?
+        self.times = np.arange(0., 50., self.dt) # magic number; about 8 rotations?
         self.positions = None
         self.Ls = None
         self.dLs = np.zeros_like(self.times)
@@ -189,12 +189,13 @@ class Spacecraft():
         '''
         ## `get_vectors()`:
 
-        Return the two-d vectors corresponding to the
-        `self.positions`.  The vectors are returned in the shape
-        `[len(self.positions),4,2]` where the zeroth index is over the
-        `self.positions`, the first index is over the four key vectors
-        corresponding to one position (see below), and the third index
-        is over the two dimensions (of the two-dimensional vectors).
+        Return the two-d vectors corresponding to the angular
+        positions from `self.get_positions()`.  The vectors are
+        returned in the shape `[len(self.times),4,2]` where the zeroth
+        index is over the `self.times`, the first index is over the
+        four key vectors corresponding to one position (see below),
+        and the third index is over the two dimensions (of the
+        two-dimensional vectors).
 
         The four vectors are:
         * `v[:,0,:]`: vector pointing towards the zeroth FOV
@@ -202,7 +203,8 @@ class Spacecraft():
         * `v[:,2,:]`: vector perpendicular to `v[:,0,:]`
         * `v[:,3,:]`: vector perpendicular to `v[:,1,:]`
         '''
-        v = np.zeros((len(self.positions),4,2))
+        p = self.get_positions()
+        v = np.zeros((len(p),4,2))
         v[:,0,:] = np.vstack((np.cos(p),  np.sin(p))).T
         v[:,1,:] = np.vstack((np.cos(p - self.fundamental_angle),  np.sin(p - self.fundamental_angle))).T
         v[:,2,:] = np.vstack((np.sin(p), -np.cos(p))).T
@@ -225,27 +227,30 @@ class Spacecraft():
         # output:
 
         * Transit times and star IDs.
+
+        # bugs:
+
+        * all the (old + new) / (old - new) stuff untested!
+        * Takes far more dot products than it needs to.
+        * The np.append() command makes everything scale as n^2.
         '''
         print 'get_transit_times: computing transit times...'
         star_vectors = sky.get_vectors()
         sc_vectors = self.get_vectors()
-        sc_transverse_vectors = self.get_transverse_vectors()
-        d1 = np.dot(star_vectors, sc_vectors[0])
-        dp1 = np.dot(star_vectors, sc_transverse_vectors[0])
+        old = np.array([np.dot(star_vectors, sc_vectors[0,j,:]) for j in range(4)])
         transit_times = []
         star_ids = []
-        for i in range(1, len(sc_transverse_vectors)):
+        for i in range(1, len(sc_vectors)):
             if (i % 1024) == 0:
-                print i, '/', len(sc_transverse_vectors), ':', len(transit_times), len(star_ids)
-            d2 = np.dot(star_vectors, sc_vectors[i])
-            dp2 = np.dot(star_vectors, sc_transverse_vectors[i])
-            I = np.flatnonzero((d1 > 0.) * (d2 > 0.) * (dp1 < 0.) * (dp2 > 0))
-            if len(I) > 0:
-                newtt = self.times[i-1] + self.dt * (0.5 + 0.5 * (dp1[I] + dp2[I]) / (dp1[I] - dp2[I]))
-                star_ids = np.append(star_ids, I)
-                transit_times = np.append(transit_times, newtt)
-            d1 = 1. * d2
-            dp1 = 1. * dp2
+                print i, '/', len(sc_vectors), ':', len(transit_times), len(star_ids)
+            new = np.array([np.dot(star_vectors, sc_vectors[i,j,:]) for j in range(4)])
+            for j in range(2):
+                I = np.flatnonzero((new[j] > 0.) * (old[j + 2] < 0.) * (new[j + 2] > 0))
+                if len(I) > 0:
+                    newtt = self.times[i-1] + self.dt * (0.5 + 0.5 * (old[j + 2, I] + new[j + 2, I]) / (old[j + 2, I] - new[j + 2, I]))
+                    star_ids = np.append(star_ids, I)
+                    transit_times = np.append(transit_times, newtt)
+            old = 1. * new
         print 'get_transit_times: ...done'
         return transit_times, star_ids
 
