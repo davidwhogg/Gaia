@@ -80,11 +80,8 @@ class TimeCatalog():
     # initialization input:
 
     * `IDs`: list of star IDs, with many repeats (we hope)
-
     * `FOVs`: list of field-of-view IDs (0 or 1)
-
     * `ts`: list of transit times
-
     * `sigmas`: list of uncertainty (noise) root-variances
     '''
     def __init__(self, IDs, FOVs, ts, sigmas):
@@ -124,18 +121,15 @@ class Spacecraft():
     # internals:
 
     * `self.I`, `self.Iinverse`: Moment of inertia information.
-
     * `self.dt`, `self.sigma_t`, `self.tau`: The three important short
-    time scales in the problem: The spacing of time grid for attitude
-    recording, the noise root-variance for time measurements, and the
-    time constant for the exponential restoring torque from the s/c
-    attitude control.
-
+      time scales in the problem: The spacing of time grid for
+      attitude recording, the noise root-variance for time
+      measurements, and the time constant for the exponential
+      restoring torque from the s/c attitude control.
     * `self.times`: A grid of times on which the angular momentum and
-    position is tracked.
-
+      position is tracked.
     * `self.dLs`, `self.positions`: Angular momentum increments
-    (impulses) and angular positions at the `self.times`.
+      (impulses) and angular positions at the `self.times`.
     '''
     def __init__(self, amp):
         self.I = 1.
@@ -164,8 +158,8 @@ class Spacecraft():
         # input:
 
         * `amp`: amplitude of Gaussian random noise.  Note square-root
-        of `self.dt` in what we are doing; this amplitude is like the
-        square-root of a variance per time.
+          of `self.dt` in what we are doing; this amplitude is like
+          the square-root of a variance per time.
         '''
         self.dLs += amp * np.sqrt(self.dt) * np.random.normal(size=(self.times.size))
         self.Ls = None
@@ -289,7 +283,7 @@ class Spacecraft():
                 print i, '/', len(sc_vectors), ':', len(transit_times), len(star_ids)
             new = np.array([np.dot(star_vectors, sc_vectors[i,j,:]) for j in range(4)])
             for j in range(2):
-                I = np.flatnonzero((new[j] > 0.) * (old[j + 2] < 0.) * (new[j + 2] > 0))
+                I = np.flatnonzero((new[j] > 0.) * ((old[j + 2] / new[j + 2]) < 0.))
                 if len(I) > 0:
                     newtt = self.times[i-1] + self.dt * (0.5 + 0.5 * (old[j + 2, I] + new[j + 2, I]) / (old[j + 2, I] - new[j + 2, I]))
                     star_ids = np.append(star_ids, I)
