@@ -77,6 +77,9 @@ class TimeCatalog():
     to be confused with the `AstrometricCatalog`, which is the output
     of fitting a model to this `TimeCatalog`.
 
+    If you sum two `TimeCatalog`s you get one big one made by
+    unioning.
+
     # initialization input:
 
     * `IDs`: list of star IDs, with many repeats (we hope)
@@ -90,6 +93,12 @@ class TimeCatalog():
         self.transit_times = ts
         self.sigmas = sigmas
         return None
+
+    def __add__(self, other):
+        return TimeCatalog(np.append(self.IDs, other.IDs),
+                           np.append(self.FOVs, other.FOVs),
+                           np.append(self.transit_times, other.transit_times),
+                           np.append(self.sigmas, other.sigmas))
 
 class AstrometricCatalog():
     '''
@@ -116,7 +125,14 @@ class Spacecraft():
 
     # initialization input:
 
-    * `amp`: Amplitude (RTFSC) for random torque impulses.
+    * `t0`: Time at the start of the mission (units arbitrary).
+    * `duration`: Duration of the mission (units arbitrary).
+    * `position0`: Angular position (radians) at time `t0`.
+    * `L0`: Initial s/c angular momentum and target angular momentum
+      (s/c applies restoring torques in `get_Ls()`) (units arbitrary,
+      though the moment of inertia `self.I` is `1.`).
+    * `amp`: Amplitude (RTFSC) for random torque impulses in
+      `apply_random_torques()`.
 
     # internals:
 
@@ -131,16 +147,16 @@ class Spacecraft():
     * `self.dLs`, `self.positions`: Angular momentum increments
       (impulses) and angular positions at the `self.times`.
     '''
-    def __init__(self, amp):
+    def __init__(self, t0, duration, position0, L0, amp):
         self.I = 1.
         self.Iinverse = 1.
         self.fundamental_angle = np.deg2rad(106.5) # magic number; angle between two telescope FOVs
         self.dt = 0.001 # magic number; about 0.057 deg (210 arcsec) at unit angular velocity
         self.sigma_t = 5.e-10 # magic number; about 100 micro-arcsec at unit angular velocity
         self.tau = 0.1 # magic number; much longer than dt for interesting dynamics
-        self.L0 = 1.
-        self.position0 = 0.
-        self.times = np.arange(0., 50., self.dt) # magic number; about 8 rotations?
+        self.L0 = L0
+        self.position0 = position0
+        self.times = np.arange(t0, t0 + duration, self.dt)
         self.positions = None
         self.Ls = None
         self.dLs = np.zeros_like(self.times)
@@ -214,7 +230,6 @@ class Spacecraft():
 
         When computing, leapfrog-integrate the angular momentum and
         angular impulses.
-
         '''
         if self.positions is None:
             print 'get_positions: computing positions...'
@@ -363,25 +378,39 @@ def main():
     plt.clf()
     thesky.plot_positions()
     plt.savefig('sky.png')
-    sc = Spacecraft(0.1)
-    plt.clf()
-    sc.plot_Ls()
-    plt.savefig('Ls.png')
-    plt.clf()
-    sc.plot_positions()
-    plt.savefig('positions.png')
-    time_catalog = sc.get_transit_time_catalog(thesky)
+    t0 = 0.
+    duration = 50.
+    gap = 10.
+    p0 = 0.
+    time_catalog = None
+    for L in (1., -1.):
+        sc = Spacecraft(t0, duration, p0, L, 0.1)
+        t0 += duration + gap
+        p0 += sc.get_positions()[-1]
+        plt.clf()
+        sc.plot_Ls()
+        plt.savefig('Ls.png')
+        plt.clf()
+        sc.plot_positions()
+        plt.savefig('positions.png')
+        if time_catalog is None:
+            time_catalog = sc.get_transit_time_catalog(thesky)
+        else:
+            time_catalog = time_catalog + sc.get_transit_time_catalog(thesky)
     plt.clf()
     I17 = np.flatnonzero(time_catalog.IDs == 17)
     obsIDs = np.arange(len(I17))
     tts = time_catalog.transit_times[I17]
     fovlabels = ["%1d" % i for i in time_catalog.FOVs[I17]]
-    print obsIDs
-    print tts
-    print fovlabels
-    plt.plot(obsIDs, tts, 'ko')
+    plt.plot(obsIDs, tts, 'ko', alpha=0.5)
+    plt.axhline(0., color='k', alpha=0.25)
+    plt.axhline(duration, color='k', alpha=0.25)
+    plt.axhline(duration + gap, color='k', alpha=0.25)
+    plt.axhline(duration + gap + duration, color='k', alpha=0.25)
     for x, y, t in zip(obsIDs, tts, fovlabels):
         plt.text(x, y, t)
+    plt.xlim(-0.5, np.max(obsIDs) + 0.5)
+    plt.ylim(np.min(tts) - gap, np.max(tts) + gap)
     plt.xlabel('observation number for star 17')
     plt.ylabel('transit time')
     plt.savefig('TimeCatalog.png')
