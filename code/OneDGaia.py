@@ -349,10 +349,11 @@ class Spacecraft():
             plt.xlabel(r'time $t$')
             plt.ylabel(r'angular momentum $L$')
             if p == 1:
-                plt.xlim(0., 10. * self.tau)
+                x0, x1 = plt.xlim()
+                plt.xlim(x0, x0 + 10. * self.tau)
         return None
 
-    def plot_positions(self):
+    def plot_positions(self, sign):
         '''
         ## `plot_Ls()`:
 
@@ -364,9 +365,13 @@ class Spacecraft():
             plt.xlabel(r'time $t$')
             plt.ylabel(r'position $\theta$')
             if p == 1:
-                plt.xlim(0., 10. * self.tau)
-                foo, bar = plt.ylim()
-                plt.ylim(foo, bar * 10. * self.tau / self.times[-1])
+                x0, x1 = plt.xlim()
+                plt.xlim(x0, x0 + 10. * self.tau)
+                y0, y1 = plt.ylim()
+                if sign > 0:
+                    plt.ylim(y0, y0 + (y1 - y0) * 10. * self.tau / (self.times[-1] - self.times[0]))
+                else:
+                    plt.ylim(y1 + (y0 - y1) * 10. * self.tau / (self.times[-1] - self.times[0]), y1)
         return None
 
 def main():
@@ -384,15 +389,16 @@ def main():
     p0 = 0.
     time_catalog = None
     for L in (1., -1.):
+        Lstr = "%+2d" % np.round(L)
         sc = Spacecraft(t0, duration, p0, L, 0.1)
         t0 += duration + gap
         p0 += sc.get_positions()[-1]
         plt.clf()
         sc.plot_Ls()
-        plt.savefig('Ls.png')
+        plt.savefig('Ls%s.png' % Lstr)
         plt.clf()
-        sc.plot_positions()
-        plt.savefig('positions.png')
+        sc.plot_positions(L)
+        plt.savefig('positions%s.png' % Lstr)
         if time_catalog is None:
             time_catalog = sc.get_transit_time_catalog(thesky)
         else:
