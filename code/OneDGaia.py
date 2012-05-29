@@ -22,6 +22,7 @@ if __name__ == '__main__':
     rc('text', usetex=True)
 import numpy as np
 import pylab as plt
+import cPickle as pickle
 
 class Sky():
     '''
@@ -420,6 +421,9 @@ def main():
     plt.xlabel('observation number for star 17')
     plt.ylabel('transit time')
     plt.savefig('TimeCatalog.png')
+    picklefile = open(prefix + '.pickle', "wb")
+    pickle.dump(pars, picklefile)
+    picklefile.close()
     return None
 
 if __name__ == '__main__':
