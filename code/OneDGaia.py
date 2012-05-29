@@ -421,8 +421,8 @@ def main():
     plt.xlabel('observation number for star 17')
     plt.ylabel('transit time')
     plt.savefig('TimeCatalog.png')
-    picklefile = open(prefix + '.pickle', "wb")
-    pickle.dump(pars, picklefile)
+    picklefile = open('TimeCatalog.pickle', "wb")
+    pickle.dump(tts, picklefile)
     picklefile.close()
     return None
 
