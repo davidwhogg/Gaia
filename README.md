@@ -1,13 +1,17 @@
 # Gaia
 
 A set of nascent documents and non-working code that relates to things
-Hogg is thinking about for *Gaia* mission execution.  Note: Hogg has no
-role in *Gaia* mission execution, so this is a pure vanity project.
+Hogg is thinking about related to *Gaia*.  Note: Hogg has no
+role in *Gaia*!
 
 ### Author:
 
-- [David W. Hogg](http://cosmo.nyu.edu/hogg/), New York University
+- [David W. Hogg](http://cosmo.nyu.edu/hogg/), (NYU) (MPIA)
 
 ### License:
 
-Copyright 2012 David W. Hogg (NYU).  All rights reserved.
+Copyright 2012, 2016 David W. Hogg (NYU).  All rights reserved.
+
+## Projects
+- Analyze Gaia attitude model choices.
+- Argue about stellar parameterizations and inference.

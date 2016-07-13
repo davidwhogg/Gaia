@@ -26,9 +26,10 @@ pgm.add_node(daft.Node("apogee", r"\footnotesize \textsl{APOGEE} instrument mode
 pgm.add_node(daft.Node("mass", r"$M$", 0.5, 3))
 pgm.add_node(daft.Node("age", r"age", 1.5, 3))
 pgm.add_node(daft.Node("feh", r"$[X/\mathrm{H}]$", 2.5, 3, aspect=1.3))
-pgm.add_node(daft.Node("extinction", r"dust", 2.5, 2))
+dusty = {"alpha": 0.25}
+pgm.add_node(daft.Node("extinction", r"dust", 2.5, 2, plot_params=dusty, label_params=dusty))
 pgm.add_node(daft.Node("distance", r"$D$", 3.5, 3))
-pgm.add_node(daft.Node("mrl", r"$\begin{array}{c}M,R,L_{\mathrm{bol}} \\ \log g,T_{\mathrm{eff}}\end{array}$", 1.5, 2, scale=1.6, aspect=1.5))
+pgm.add_node(daft.Node("mrl", r"$\begin{array}{c}M,R,L_{\mathrm{bol}} \\ {\scriptstyle (\log g,\,T_{\mathrm{eff}})}\end{array}$", 1.5, 2, scale=1.6, aspect=1.5))
 pgm.add_node(daft.Node("Ltrue", r"$\{L_{\lambda}\}$", 1.5, 1))
 
 # observables
@@ -43,14 +44,14 @@ pgm.add_edge("feh", "mrl")
 pgm.add_edge("mrl", "Ltrue")
 pgm.add_edge("Ltrue", "fnorm")
 pgm.add_edge("Ltrue", "m")
-pgm.add_edge("extinction", "m")
+pgm.add_edge("extinction", "m", **dusty)
 pgm.add_edge("distance", "m")
 pgm.add_edge("distance", "parallax")
 
 # physics
 pgm.add_edge("galaxy", "age")
 pgm.add_edge("galaxy", "feh")
-pgm.add_edge("galaxy", "extinction")
+pgm.add_edge("galaxy", "extinction", **dusty)
 pgm.add_edge("galaxy", "distance")
 pgm.add_edge("imf", "mass")
 pgm.add_edge("steve", "mrl")
