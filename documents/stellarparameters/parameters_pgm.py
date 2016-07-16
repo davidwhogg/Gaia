@@ -9,59 +9,93 @@ rc("text", usetex=True)
 
 import daft
 
-pgm = daft.PGM([7, 5], origin=[-1., -0.5], observed_style="inner")
+def makepgm(modelcomplexity):
+    pgm = daft.PGM([9, 7], origin=[-1., -0.5], observed_style="inner")
+    normal = {"alpha": 0.70}
+    notyet = {"alpha": 0.15}
+    observed = {"facecolor": "0.90", "alpha": 0.70}
 
-# physics
-pgm.add_node(daft.Node("galaxy", r"\footnotesize Galaxy", 3.5, 4, fixed=True))
-pgm.add_node(daft.Node("imf", r"\footnotesize IMF", 0.5, 4, fixed=True))
-pgm.add_node(daft.Node("steve", r"\footnotesize stellar evolution", 0, 2, fixed=True))
-pgm.add_node(daft.Node("atmos", r"\footnotesize atmospheres", 0, 1, fixed=True))
+    # missions
+    instrumentx = 6.5
+    gaiay = 3
+    keplery = 0
+    apogeey = 1
+    photoy = 2
+    pgm.add_node(daft.Node("apogee", r"\footnotesize spectroscopy instrument", instrumentx, apogeey, fixed=True, plot_params=normal))
+    if modelcomplexity > 0:
+        pgm.add_node(daft.Node("gaia", r"\footnotesize \textsl{Gaia}", instrumentx, gaiay, fixed=True, plot_params=normal))
+        pgm.add_node(daft.Node("photo", r"\footnotesize photometry instrument", instrumentx, photoy, fixed=True, plot_params=normal))
+        pgm.add_node(daft.Node("kepler", r"\footnotesize \textsl{Kepler}", instrumentx, keplery, fixed=True, plot_params=normal))
 
-# missions
-pgm.add_node(daft.Node("gaia", r"\footnotesize \textsl{Gaia} noise model", 4.5, 2, fixed=True))
-pgm.add_node(daft.Node("photo", r"\footnotesize photometry noise model", 4.5, 1, fixed=True))
-pgm.add_node(daft.Node("apogee", r"\footnotesize \textsl{APOGEE} instrument model", 4.5, 0, fixed=True))
+    # physics
+    physicsx = 0
+    pgm.add_node(daft.Node("atmos", r"\footnotesize photospheres", physicsx, 2., fixed=True, plot_params=normal))
+    if modelcomplexity > 0:
+        pgm.add_node(daft.Node("steve", r"\footnotesize stellar evolution", physicsx, 3., fixed=True, plot_params=normal))
+        pgm.add_node(daft.Node("struc", r"\footnotesize stellar structure", physicsx, 1., fixed=True, plot_params=normal))
+        pgm.add_node(daft.Node("galaxy", r"Milky Way", 3.5, 6., fixed=True, plot_params=notyet, label_params=notyet))
 
-# latents
-pgm.add_node(daft.Node("mass", r"$M$", 0.5, 3))
-pgm.add_node(daft.Node("age", r"age", 1.5, 3))
-pgm.add_node(daft.Node("feh", r"$[X/\mathrm{H}]$", 2.5, 3, aspect=1.3))
-dusty = {"alpha": 0.25}
-pgm.add_node(daft.Node("extinction", r"dust", 2.5, 2, plot_params=dusty, label_params=dusty))
-pgm.add_node(daft.Node("distance", r"$D$", 3.5, 3))
-pgm.add_node(daft.Node("mrl", r"$\begin{array}{c}M,R,L_{\mathrm{bol}} \\ {\scriptstyle (\log g,\,T_{\mathrm{eff}})}\end{array}$", 1.5, 2, scale=1.6, aspect=1.5))
-pgm.add_node(daft.Node("Ltrue", r"$\{L_{\lambda}\}$", 1.5, 1))
+    # latents
+    parametery = 4
+    pgm.add_node(daft.Node("logg", r"$\log g$", 1.5, parametery, plot_params=normal))
+    pgm.add_node(daft.Node("teff", r"$T_{\mathrm{eff}}$", 2.5, parametery, plot_params=normal))
+    pgm.add_node(daft.Node("feh", r"$[X/\mathrm{H}]$", 3., parametery + 1, aspect=1.3, plot_params=normal))
+    if modelcomplexity > 0:
+        pgm.add_node(daft.Node("mass", r"$M$", 1., parametery + 1, plot_params=normal))
+        pgm.add_node(daft.Node("age", r"age", 2., parametery + 1., plot_params=notyet, label_params=notyet))
+        pgm.add_node(daft.Node("dust", r"dust", 4., parametery + 1., plot_params=normal))
+        pgm.add_node(daft.Node("distance", r"$D$", 5., parametery + 1., plot_params=normal))
 
-# observables
-pgm.add_node(daft.Node("fnorm", r"$\{f^{\mathrm{normed}}_{\lambda}\}$", 1.5, 0, observed=True, aspect=2.1))
-pgm.add_node(daft.Node("m", r"$\{m_{\mathrm{band}}\}$", 2.5, 1, observed=True, aspect=1.8))
-pgm.add_node(daft.Node("parallax", r"$\varpi$", 3.5, 2, observed=True))
+    # observables
+    pgm.add_node(daft.Node("fnorm", r"$\{f^{\mathrm{normed}}_{\lambda}\}$", 2.5, apogeey, observed=True, aspect=2.1, plot_params=observed))
+    if modelcomplexity > 0:
+        pgm.add_node(daft.Node("seismo", r"$\Delta\nu,\nu_{\mathrm{max}}$", 1., keplery, observed=True, aspect=2.1, plot_params=observed))
+        pgm.add_node(daft.Node("m", r"$\{m_{\mathrm{band}}\}$", 4., photoy, observed=True, aspect=2.1, plot_params=observed))
+        pgm.add_node(daft.Node("parallax", r"$\varpi$", 5.5, gaiay, observed=True, plot_params=observed))
 
-# pgm
-pgm.add_edge("mass", "mrl")
-pgm.add_edge("age", "mrl")
-pgm.add_edge("feh", "mrl")
-pgm.add_edge("mrl", "Ltrue")
-pgm.add_edge("Ltrue", "fnorm")
-pgm.add_edge("Ltrue", "m")
-pgm.add_edge("extinction", "m", **dusty)
-pgm.add_edge("distance", "m")
-pgm.add_edge("distance", "parallax")
+    # pgm
+    pgm.add_edge("teff", "fnorm", **normal)
+    pgm.add_edge("logg", "fnorm", **normal)
+    pgm.add_edge("feh", "fnorm", **normal)
+    if modelcomplexity > 0:
+        pgm.add_edge("teff", "m", **normal)
+        pgm.add_edge("logg", "m", **normal)
+        pgm.add_edge("feh", "m", **normal)
+        pgm.add_edge("mass", "m", **normal)
+        pgm.add_edge("dust", "m", **normal)
+        pgm.add_edge("distance", "m", **normal)
+        pgm.add_edge("distance", "parallax", **normal)
+        pgm.add_edge("logg", "seismo", **normal)
+        pgm.add_edge("mass", "seismo", **normal)
+        pgm.add_edge("feh", "logg", **normal)
+        pgm.add_edge("feh", "teff", **normal)
+        for b in ["logg", "teff"]:
+            pgm.add_edge("mass", b, **normal)
+            pgm.add_edge("age", b, **notyet)
 
-# physics
-pgm.add_edge("galaxy", "age")
-pgm.add_edge("galaxy", "feh")
-pgm.add_edge("galaxy", "extinction", **dusty)
-pgm.add_edge("galaxy", "distance")
-pgm.add_edge("imf", "mass")
-pgm.add_edge("steve", "mrl")
-pgm.add_edge("atmos", "Ltrue")
+    # physics
+    pgm.add_edge("atmos", "fnorm", **normal)
+    if modelcomplexity > 0:
+        pgm.add_edge("steve", "m", **normal)
+        pgm.add_edge("steve", "logg", **normal)
+        pgm.add_edge("steve", "teff", **normal)
+        pgm.add_edge("atmos", "m", **normal)
+        pgm.add_edge("struc", "seismo", **normal)
+        for b in ["mass", "age", "feh", "dust", "distance"]:
+            pgm.add_edge("galaxy", b, **notyet)
 
-# noise models
-pgm.add_edge("gaia", "parallax")
-pgm.add_edge("photo", "m")
-pgm.add_edge("apogee", "fnorm")
+    # noise models
+    pgm.add_edge("apogee", "fnorm", **normal)
+    if modelcomplexity > 0:
+        pgm.add_edge("gaia", "parallax", **normal)
+        pgm.add_edge("photo", "m", **normal)
+        pgm.add_edge("kepler", "seismo", **normal)
 
-pgm.render()
-pgm.figure.savefig("parameters.pdf")
-pgm.figure.savefig("parameters.png", dpi=150)
+    pgm.render()
+    prefix = "parameters{:02d}".format(modelcomplexity)
+    pgm.figure.savefig(prefix + ".pdf")
+    pgm.figure.savefig(prefix + ".png", dpi=150)
+
+if __name__ == "__main__":
+    makepgm(0)
+    makepgm(2)

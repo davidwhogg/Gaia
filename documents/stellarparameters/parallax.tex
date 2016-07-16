@@ -21,7 +21,7 @@ to constrain the local stellar photospheric parameters (effective
 temperature and surface gravity to first order), using a stellar
 photosphere model.
 These infererences can be helped by, but do not in any way require
-the use of any stellar evolution models.
+the use of, a stellar evolution model or tracks.
 Spectroscopic surveys often choose to model stellar
 spectra using photosphere models only, with no input of evolution
 models.
@@ -39,8 +39,8 @@ model.
 Once an evolution model is used in conjunction with the parallax
 inference, it is inconsistent (and wrong) not to also include the
 evolution model in the spectrum inference (that is, require the
-effective temperature and surface gravity to lie on evolutionarily
-possible relations or isochrones).
+effective temperature and surface gravity to lie on evolutionary
+tracks or isochrones).
 That is, the presence of the \gaia\ data will force changes to how
 we analyze spectral data.
 We give some unsolicited advice, and perform some demonstrations with toy data.
@@ -54,9 +54,16 @@ We give some unsolicited advice, and perform some demonstrations with toy data.
 
 Hello World!
 
+\clearpage
 \begin{figure}
-\includegraphics{./parameters.png}
-\caption{Whaty what.\label{pgm}}
+\includegraphics{./parameters00.pdf}
+\caption{Whaty what.\label{bad}}
+\end{figure}
+
+\clearpage
+\begin{figure}
+\includegraphics{./parameters02.pdf}
+\caption{Whaty what.\label{good}}
 \end{figure}
 
 \end{document}
