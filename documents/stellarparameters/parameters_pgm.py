@@ -10,7 +10,7 @@ rc("text", usetex=True)
 import daft
 
 def makepgm(modelcomplexity):
-    pgm = daft.PGM([9, 7], origin=[-1., -0.5], observed_style="inner")
+    pgm = daft.PGM([8.5, 7.], origin=[-0.75, -0.5], observed_style="inner")
     normal = {"alpha": 0.70}
     notyet = {"alpha": 0.15}
     observed = {"facecolor": "0.90", "alpha": 0.70}
