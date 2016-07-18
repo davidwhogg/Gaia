@@ -2,8 +2,6 @@
 This file is part of the Gaia project.
 Copyright 2016 David W. Hogg (NYU).
 
-# to-do
-- add my name!
 """
 
 from matplotlib import rc
@@ -13,13 +11,13 @@ rc("text", usetex=True)
 import daft
 
 def makepgm(modelcomplexity):
-    pgm = daft.PGM([9., 7.], origin=[-0.75, -0.5], observed_style="inner")
+    pgm = daft.PGM([9., 7.], origin=[-0.75, -0.5], observed_style="inner", grid_unit=1.75)
     normal = {"alpha": 0.60}
     notyet = {"alpha": 0.15}
     observed = {"facecolor": "0.90", "alpha": 0.70}
 
     # missions
-    instrumentx = 7.
+    instrumentx = 7.5
     gaiay = 3.
     keplery = 0.
     apogeey = 1.
@@ -42,16 +40,20 @@ def makepgm(modelcomplexity):
 
     # latents
     parametery = 4
-    pgm.add_node(daft.Node("logg", r"$\log g$", 1.5, parametery, plot_params=normal))
-    pgm.add_node(daft.Node("teff", r"$T_{\mathrm{eff}}$", 2.5, parametery, plot_params=normal))
-    pgm.add_node(daft.Node("feh", r"$[X/\mathrm{H}]$", 3., parametery + 1, aspect=1.3, plot_params=normal))
     pgm.add_node(daft.Node("distance", r"$D$", 5., parametery + 1., plot_params=normal))
-    pgm.add_node(daft.Node("I", r"$\{I_{\lambda}\}$", 2.5, parametery - 2., plot_params=normal))
+    pgm.add_node(daft.Node("I", r"$\{I_{\lambda}\}$", 2.75, parametery - 2., plot_params=normal))
+    if modelcomplexity in [0, 2]:
+        pgm.add_node(daft.Node("logg", r"$\log g$", 1.5, parametery, plot_params=normal))
+        pgm.add_node(daft.Node("teff", r"$T_{\mathrm{eff}}$", 2.5, parametery, plot_params=normal))
+        pgm.add_node(daft.Node("feh", r"$[X/\mathrm{H}]$", 3., parametery + 1, aspect=1.3, plot_params=normal))
     if modelcomplexity > 0:
+        pgm.add_node(daft.Node("dust", r"dust", 4., parametery + 1., plot_params=normal))
+    if modelcomplexity == 1:
+        pgm.add_node(daft.Node("star", r"stellar parameters", 2., parametery + 1., aspect=4., plot_params=normal))
+    if modelcomplexity == 2:
         pgm.add_node(daft.Node("minit", r"$M_{\mathrm{init}}$", 1., parametery + 2, plot_params=notyet, label_params=notyet))
         pgm.add_node(daft.Node("mass", r"$M$", 1., parametery + 1, plot_params=normal))
         pgm.add_node(daft.Node("age", r"age", 2., parametery + 1., plot_params=notyet, label_params=notyet))
-        pgm.add_node(daft.Node("dust", r"dust", 4., parametery + 1., plot_params=normal))
         pgm.add_node(daft.Node("L", r"$L_{\mathrm{bol}}$", 3.5, parametery - 1., plot_params=normal))
         pgm.add_node(daft.Node("R", r"$R$", 1., parametery - 1., plot_params=normal))
 
@@ -61,26 +63,31 @@ def makepgm(modelcomplexity):
     if modelcomplexity > 0:
         pgm.add_node(daft.Node("seismo", r"$\Delta\nu,\nu_{\mathrm{max}}$", 2., keplery, observed=True, aspect=2.1, plot_params=observed))
         pgm.add_node(daft.Node("m", r"$\{m_j\}$", 4., photoy, observed=True, aspect=2.1, plot_params=observed))
-        pgm.add_node(daft.Node("fringes", r"fringes", 6., interfy, observed=True, aspect=2.1, plot_params=observed))
+        pgm.add_node(daft.Node("fringes", r"\small fringes", 6., interfy, observed=True, aspect=2.1, plot_params=observed))
 
     # pgm
-    pgm.add_edge("teff", "I", **normal)
-    pgm.add_edge("logg", "I", **normal)
-    pgm.add_edge("feh", "I", **normal)
     pgm.add_edge("I", "fnorm", **normal)
     pgm.add_edge("distance", "parallax", **normal)
+    if modelcomplexity in [0, 2]:
+        pgm.add_edge("teff", "I", **normal)
+        pgm.add_edge("logg", "I", **normal)
+        pgm.add_edge("feh", "I", **normal)
     if modelcomplexity > 0:
+        pgm.add_edge("dust", "m", **normal)
+        pgm.add_edge("distance", "m", **normal)
+        pgm.add_edge("distance", "fringes", **normal)
+    if modelcomplexity == 1:
+        for b in ["fringes", "m", "I", "seismo"]:
+            pgm.add_edge("star", b, **normal)
+    if modelcomplexity == 2:
         pgm.add_edge("teff", "L", **normal)
         pgm.add_edge("R", "L", **normal)
         pgm.add_edge("L", "m", **normal)
-        pgm.add_edge("dust", "m", **normal)
-        pgm.add_edge("distance", "m", **normal)
         pgm.add_edge("logg", "seismo", **normal)
         pgm.add_edge("mass", "seismo", **normal)
         pgm.add_edge("logg", "R", **normal)
         pgm.add_edge("mass", "R", **normal)
         pgm.add_edge("R", "fringes", **normal)
-        pgm.add_edge("distance", "fringes", **normal)
         pgm.add_edge("feh", "logg", **normal)
         pgm.add_edge("feh", "teff", **normal)
         pgm.add_edge("minit", "mass", **notyet)
@@ -92,11 +99,17 @@ def makepgm(modelcomplexity):
     # physics
     pgm.add_edge("atmos", "I", **normal)
     if modelcomplexity > 0:
+        pgm.add_edge("struc", "seismo", **normal)
+        for b in ["dust", "distance"]:
+            pgm.add_edge("galaxy", b, **notyet)
+    if modelcomplexity == 1:
+        pgm.add_edge("steve", "star", **normal)
+        pgm.add_edge("galaxy", "star", **notyet)
+    if modelcomplexity == 2:
         pgm.add_edge("steve", "mass", **notyet)
         pgm.add_edge("steve", "logg", **normal)
         pgm.add_edge("steve", "teff", **normal)
-        pgm.add_edge("struc", "seismo", **normal)
-        for b in ["minit", "age", "feh", "dust", "distance"]:
+        for b in ["minit", "age", "feh"]:
             pgm.add_edge("galaxy", b, **notyet)
 
     # noise models
@@ -108,10 +121,14 @@ def makepgm(modelcomplexity):
         pgm.add_edge("interf", "fringes", **normal)
 
     pgm.render()
+    ax = pgm.figure.gca()
+    x1, x2 = ax.get_xlim()
+    y1, y2 = ax.get_ylim()
+    pgm.figure.gca().text(x2-0.2, y2-0.2, r"\footnotesize David W. Hogg (2016)", ha="right", va="top")
     prefix = "parameters{:02d}".format(modelcomplexity)
     pgm.figure.savefig(prefix + ".pdf")
     pgm.figure.savefig(prefix + ".png", dpi=150)
 
 if __name__ == "__main__":
-    makepgm(0)
-    makepgm(2)
+    for i in range(3):
+        makepgm(i)
