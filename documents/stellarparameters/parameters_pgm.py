@@ -60,7 +60,7 @@ def makepgm(modelcomplexity):
     pgm.add_node(daft.Node("parallax", r"$\varpi$", 5., gaiay, observed=True, plot_params=observed))
     if modelcomplexity > 0:
         pgm.add_node(daft.Node("seismo", r"$\Delta\nu,\nu_{\mathrm{max}}$", 2., keplery, observed=True, aspect=2.1, plot_params=observed))
-        pgm.add_node(daft.Node("m", r"$m_{\mathrm{bol}}$", 4., photoy, observed=True, aspect=2.1, plot_params=observed))
+        pgm.add_node(daft.Node("m", r"$\{m_j\}$", 4., photoy, observed=True, aspect=2.1, plot_params=observed))
         pgm.add_node(daft.Node("fringes", r"fringes", 6., interfy, observed=True, aspect=2.1, plot_params=observed))
 
     # pgm
