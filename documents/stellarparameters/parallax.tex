@@ -15,36 +15,63 @@
 \author{DWH, HWR, others}
 
 \begin{abstract}
-Perhaps the most physically informative measurement to take of
-an unresolved star is a high resolution spectrum, which can be used
-to constrain the local stellar photospheric parameters (effective
-temperature and surface gravity to first order), using a stellar
-photosphere model.
-These infererences can be helped by, but do not in any way require
-the use of, a stellar evolution model or tracks.
-Spectroscopic surveys often choose to model stellar
-spectra using photosphere models only, with no input of evolution
-models.
-The \gaia\ Mission is about to release precise parallaxes for hundreds
-of thousands of stars!
-When combined with photometry or spectrophotometry, these parallaxes
-deliver information about bolometric luminosity and surface gravity;
-they hold great promise for improving inferences about stars.
-Here we make the general properties of these inferences explicit with
-a graphical model and discussion.
-Any use of a parallax
-to learn about stellar parameters necessarily requires the use not
-just of a photosphere model, but also a stellar-evolution
-model.
-Once an evolution model is used in conjunction with the parallax
-inference, it is inconsistent (and wrong) not to also include the
-evolution model in the spectrum inference (that is, require the
-effective temperature and surface gravity to lie on evolutionary
-tracks or isochrones).
-That is, the presence of the \gaia\ data will force changes to how
-we analyze spectral data.
-We give some unsolicited advice, and perform some demonstrations with toy data.
+The \gaia\ Mission is about to release precise parallax measurements
+for hundreds of thousands of stars.
+A parallax measurement delivers information about the distance (from
+\gaia's orbit) to the star, but here we ask what it tells us about the
+intrinsic physical properties of the star.
+The answer to this question is technically \emph{subjective}: It depends on
+what other information you know (or believe you know) about the star.
+If you have calibrated multi-band photometry across the ultraviolet to
+near infrared, the parallax (with only weak spectral assumptions)
+delivers information about the stellar bolometric luminosity.
+If you believe stellar photosphere models, the parallax delivers
+information about stellar radius and effective temperature, and even
+more precisely if you have spectroscopic data on the star.
+If you believe stellar evolution and stellar structure models
+(isochrones or tracks), the parallax also delivers information about
+surface gravity, mass, composition, and age.
+With other data (interferometry, asteroseismology, or binary-orbit
+timing, for examples), even more can be learned.
+We illustrate these points with toy data and give some practical
+advice for those using the \gaia\ data to improve our knowledge of
+stars.
+The main point is that there are no assumption-free inferences, and
+every new kind of inference brings with it new kinds of
+model-dependence.
 \end{abstract}
+
+%% \begin{abstract}
+%% Perhaps the most physically informative measurement to take of
+%% an unresolved star is a high resolution spectrum, which can be used
+%% to constrain the local stellar photospheric parameters (effective
+%% temperature and surface gravity to first order), using a stellar
+%% photosphere model.
+%% These infererences can be helped by, but do not in any way require
+%% the use of, a stellar evolution model or tracks.
+%% Spectroscopic surveys often choose to model stellar
+%% spectra using photosphere models only, with no input of evolution
+%% models.
+%% The \gaia\ Mission is about to release precise parallaxes for hundreds
+%% of thousands of stars!
+%% When combined with photometry or spectrophotometry, these parallaxes
+%% deliver information about bolometric luminosity and surface gravity;
+%% they hold great promise for improving inferences about stars.
+%% Here we make the general properties of these inferences explicit with
+%% a graphical model and discussion.
+%% Any use of a parallax
+%% to learn about stellar parameters necessarily requires the use not
+%% just of a photosphere model, but also a stellar-evolution
+%% model.
+%% Once an evolution model is used in conjunction with the parallax
+%% inference, it is inconsistent (and wrong) not to also include the
+%% evolution model in the spectrum inference (that is, require the
+%% effective temperature and surface gravity to lie on evolutionary
+%% tracks or isochrones).
+%% That is, the presence of the \gaia\ data will force changes to how
+%% we analyze spectral data.
+%% We give some unsolicited advice, and perform some demonstrations with toy data.
+%% \end{abstract}
 
 \keywords{
   Hello
@@ -53,6 +80,8 @@ We give some unsolicited advice, and perform some demonstrations with toy data.
 }
 
 Hello World!
+
+\end{document}
 
 \clearpage
 \begin{figure}
