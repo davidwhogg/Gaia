@@ -1,0 +1,19 @@
+#!/bin/bash
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-000.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-001.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-002.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-003.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-004.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-005.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-006.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-007.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-008.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-009.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-010.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-011.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-012.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-013.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-014.fits
+curl -O http://cdn.gea.esac.esa.int/Gaia/tgas_source/fits/TgasSource_000-000-015.fits
+ls -l *.fits
+md5sum *.fits
