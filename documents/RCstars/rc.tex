@@ -1,0 +1,57 @@
+\documentclass[12pt, letterpaper]{article}
+
+\newcommand{\acronym}[1]{{\small{#1}}}
+\newcommand{\project}[1]{\textsl{#1}}
+\newcommand{\tgas}{\project{\acronym{T-GAS}}}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\pc}{\unit{pc}}
+\newcommand{\au}{\unit{au}}
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\given}{\,|\,}
+
+\setlength{\parindent}{1.0\baselineskip}
+\linespread{1.09}
+\raggedbottom
+\sloppy
+\sloppypar
+\frenchspacing
+
+\begin{document}
+
+There are $N$ RC stars $n$.
+Let's presume that we have good identifications of RC stars, and we
+don't have to deal with membership probabilities or contamination.
+For each of these RC stars, the \tgas\ Catalog delivers data $(G_n,
+\varpi_n)$.  Our generative model is
+\begin{eqnarray}
+  G_n &=& M + 5\,\log_{10}(\frac{d_n}{10\,\pc}) + \delta_n
+  \\
+  p(\delta_n) &=& \normal(\delta_n\given 0, \sigma_{Gn}^2+\sigma_M^2)
+  \\
+  \varpi_n &=& \frac{1\,\au}{d_n} + \epsilon_n
+  \\
+  p(\epsilon_n) &=& \normal(\epsilon_n\given 0, \sigma_{\varpi n}^2)
+  \quad ,
+\end{eqnarray}
+where $(G_n, \sigma_{Gn}^2, \varpi_n, \sigma_{\varpi n}^2)$ all come
+from the \tgas\ Catalog (that is, they are fixed), and $(M,
+\sigma_M^2, d_n)$ are model parameters (that is, we will infer them).
+We only care about the intrinsic magnitude variance $\sigma_M^2$, so
+we need to marginalize out parameters $(M, d_n)$.
+We will use prior pdfs
+\begin{eqnarray}
+  p(M) &\propto& 1          \quad\mbox{for $M_a<M<M_b$}
+  \\
+  p(\sigma_M^2) &\propto& 1 \quad\mbox{for $\sigma_a^2<\sigma_M^2<\sigma_b^2$}
+  \\
+  p(d_n) &\propto& d_n^2    \quad\mbox{for $d_a < d_n < d_b$}
+  \quad,
+\end{eqnarray}
+where the limits (subscripted $a$ and $b$) are (going to be) hard-set
+hyper-parameters.
+
+Our method is to perform Gibbs-sampling MCMC, with the outer loop
+sampling in $(M, \sigma_M^2)$ and the inner loop sampling in $d_n$.
+
+\end{document}
