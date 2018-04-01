@@ -3,6 +3,7 @@
 
 \noindent
 \textbf{A likelihood function for the \textsl{Gaia} Data}
+\bigskip
 
 \noindent
 \textbf{David W. Hogg} and others
@@ -22,9 +23,13 @@ a probability of the \textsl{Gaia} data, conditioned on stellar parameters,
 evaluated at the location of the data.
 Concretely, our recommendation is to assume
 (for, say, the parallax) that the \textsl{Gaia} Catalog-reported
-value is the mean and the uncertainty is the root-variance of a Gaussian
+value and uncertainty are the mean and root-variance of a Gaussian
 function that can stand in for the true likelihood function.
 This is the implicit assumption in most \textsl{Gaia} literature to date;
-our only goal here is to make that assumption explicit.
+our only goal here is to make the assumption explicit.
+Certain technical choices by the \textsl{Gaia} team could invalidate
+this assumption; it is important to downstream users of any catalog products
+that they can get from those products likelihood information about the fundamental
+data.
 
 \end{document}
