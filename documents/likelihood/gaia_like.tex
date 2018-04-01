@@ -1,0 +1,30 @@
+\documentclass[12pt]{article}
+\begin{document}
+
+\noindent
+\textbf{A likelihood function for the \textsl{Gaia} Data}
+
+\noindent
+\textbf{David W. Hogg} and others
+
+\paragraph{Abstract:}
+When we perform probabilistic inferences with the \textsl{Gaia} Mission data,
+we technically require
+a \emph{likelihood function}, or a probability of the (raw) data as a function
+of stellar (astrometric and photometric) properties.
+Unfortunately, we aren't (at present) given access to the raw \textsl{Gaia}
+data; we are only given a catalog of derived astrometric properties for the stars.
+How are we to perform probabilistic inferences in this context?
+The answer---implicit in many publications---is that we should look at the
+\textsl{Gaia} Catalog as containing not the \emph{values} of the stellar properties,
+nor estimates thereof, but instead as containing parameters of a likelihood function, or
+a probability of the \textsl{Gaia} data, conditioned on stellar parameters,
+evaluated at the location of the data.
+Concretely, our recommendation is to assume
+(for, say, the parallax) that the \textsl{Gaia} Catalog-reported
+value is the mean and the uncertainty is the root-variance of a Gaussian
+function that can stand in for the true likelihood function.
+This is the implicit assumption in most \textsl{Gaia} literature to date;
+our only goal here is to make that assumption explicit.
+
+\end{document}
