@@ -1,13 +1,23 @@
 \documentclass[12pt]{article}
 \newcommand{\Gaia}{\textsl{Gaia}}
-\begin{document}
+\addtolength{\topmargin}{-0.75in}
+\addtolength{\textheight}{2.00in}
+\setlength{\headsep}{0in}
+\setlength{\headheight}{0in}
+\begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \noindent
-\textbf{A likelihood function for the \Gaia\ Data}
+\textbf{A likelihood function for the \Gaia\ Data}\footnote{%
+  Copyright 2018 the author. Feel free to reproduce and redistribute, provided
+  that you make no changes whatsoever.}
 \bigskip
 
 \noindent
-\textbf{David W. Hogg} and others
+by \textbf{David W. Hogg}\footnote{%
+\textsl{Center for Cosmology and Particle Physics, Department of Physics, New York University}, and
+\textsl{Center for Data Science, New York University}, and
+\textsl{Max-Planck-Institut f\"ur Astronomie, Heidelberg}, and
+\textsl{Flatiron Institute, New York City}}
 
 \paragraph{Abstract:}
 When we perform probabilistic inferences with the \Gaia\ Mission data,
@@ -22,12 +32,12 @@ The answer---implicit in many publications---is that we should look at the
 \Gaia\ Catalog as containing the parameters of a likelihood function, or
 a probability of the \Gaia\ data, conditioned on stellar properties,
 evaluated at the location of the data.
-Concretely, our recommendation is to assume
+Concretely, my recommendation is to assume
 (for, say, the parallax) that the Catalog-reported
 value and uncertainty are the mean and root-variance of a Gaussian
 function that can stand in for the true likelihood function.
 This is the implicit assumption in most \Gaia\ literature to date;
-our only goal here is to make the assumption explicit.
+my only goal here is to make the assumption explicit.
 Certain technical choices by the \Gaia\ team could invalidate
 this assumption; it is important to downstream users of any catalog products
 that they deliver likelihood information about the fundamental
