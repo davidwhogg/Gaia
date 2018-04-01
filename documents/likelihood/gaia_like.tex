@@ -1,35 +1,81 @@
 \documentclass[12pt]{article}
+\newcommand{\Gaia}{\textsl{Gaia}}
 \begin{document}
 
 \noindent
-\textbf{A likelihood function for the \textsl{Gaia} Data}
+\textbf{A likelihood function for the \Gaia\ Data}
 \bigskip
 
 \noindent
 \textbf{David W. Hogg} and others
 
 \paragraph{Abstract:}
-When we perform probabilistic inferences with the \textsl{Gaia} Mission data,
+When we perform probabilistic inferences with the \Gaia\ Mission data,
 we technically require
-a \emph{likelihood function}, or a probability of the (raw) data as a function
+a \emph{likelihood function}, or a probability of the (raw-ish) data as a function
 of stellar (astrometric and photometric) properties.
-Unfortunately, we aren't (at present) given access to the raw \textsl{Gaia}
-data; we are only given a catalog of derived astrometric properties for the stars.
-How are we to perform probabilistic inferences in this context?
+Unfortunately, we aren't (at present) given access to the \Gaia
+data directly;
+we are only given a catalog of derived astrometric properties for the stars.
+How do we perform probabilistic inferences in this context?
 The answer---implicit in many publications---is that we should look at the
-\textsl{Gaia} Catalog as containing not the \emph{values} of the stellar properties,
-nor estimates thereof, but instead as containing parameters of a likelihood function, or
-a probability of the \textsl{Gaia} data, conditioned on stellar parameters,
+\Gaia\ Catalog as containing the parameters of a likelihood function, or
+a probability of the \Gaia\ data, conditioned on stellar properties,
 evaluated at the location of the data.
 Concretely, our recommendation is to assume
-(for, say, the parallax) that the \textsl{Gaia} Catalog-reported
+(for, say, the parallax) that the \Gaia\ Catalog-reported
 value and uncertainty are the mean and root-variance of a Gaussian
 function that can stand in for the true likelihood function.
-This is the implicit assumption in most \textsl{Gaia} literature to date;
+This is the implicit assumption in most \Gaia\ literature to date;
 our only goal here is to make the assumption explicit.
-Certain technical choices by the \textsl{Gaia} team could invalidate
+Certain technical choices by the \Gaia\ team could invalidate
 this assumption; it is important to downstream users of any catalog products
 that they can get from those products likelihood information about the fundamental
 data.
+
+\paragraph{Introduction:}
+The \Gaia\ data are being used in many probabilistic inferences (cite lots of stuff).
+
+These inferences implicitly or explicitly construct a locally Gaussian
+likelihood function for each object.
+
+There is work on probabilistic catalogs (cite lots of stuff). This work
+will be useless if it can't be used to construct a LF in the end.
+
+\paragraph{A likelihood function for \Gaia}
+Can think of this as a LF given the catalog data. Or of the raw data.
+These will be identical if the catalog contains a set of sufficient statistics
+for the raw data!
+Attitude taken here is that we care about the raw data likelihood.
+
+There are nuisance parameters. We are going to assume that the Gaia team either
+optimizes or marginalizes over these. The difference between these options won't
+be big.
+
+Give the one-d formula. Cite various.
+
+Give the K-d formula. Cite various.
+
+\paragraph{Discussion:}
+Why did you write this note? I am not sure. It is just a restate of the
+obvious.
+
+What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
+noise is close to Gaussian, and the signal-to-noise is high.
+
+What about star--star covariances? These are being ignored too, but they
+will be small in the long run (cite Holl?).
+
+What about non-Gaussianity? There is nothing we can do about that.
+
+Why are there negative parallaxes? There will be, and you can think about
+it two ways: Linear fitting will do this at low s/n in general. And the
+LF approximation might require it!
+They are required if the team is delivering likelihood information.
+
+What are we doing with our inferences? If we are producing true posterior
+information (as with cite this and cite that), then our inferences may not
+be re-usable by anyone. This is a danger for all of us. And it isn't enough
+to report our priors, because: Reproducibility, support, etc.
 
 \end{document}
