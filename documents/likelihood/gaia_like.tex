@@ -1,9 +1,17 @@
 \documentclass[12pt]{article}
-\newcommand{\Gaia}{\textsl{Gaia}}
+
 \addtolength{\topmargin}{-0.75in}
 \addtolength{\textheight}{2.00in}
 \setlength{\headsep}{0in}
 \setlength{\headheight}{0in}
+
+\newcommand{\Gaia}{\textsl{Gaia}}
+\newcommand{\documentname}{\textsl{Note}}
+
+\newcommand{\AU}{\mathrm{A.U.}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\given}{\,|\,}
+
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \noindent
@@ -29,7 +37,7 @@ directly;
 we are only given a catalog of derived astrometric properties for the stars.
 How do we perform probabilistic inferences in this context?
 The answer---implicit in many publications---is that we should look at the
-\Gaia\ Catalog as containing the parameters of a likelihood function, or
+\Gaia\ Catalog as containing the \emph{parameters of a likelihood function}, or
 a probability of the \Gaia\ data, conditioned on stellar properties,
 evaluated at the location of the data.
 Concretely, my recommendation is to assume
@@ -41,19 +49,135 @@ my only goal here is to make the assumption explicit.
 Certain technical choices by the Mission team could invalidate
 this assumption. Generalizing beyond \Gaia,
 it is important to downstream users of any catalog products
-that they deliver likelihood information about the fundamental data.
+that they deliver likelihood information about the fundamental data;
+this is a challenge for the probabilistic catalogs of the future.
 
 \paragraph{Introduction:}
-The \Gaia\ data are being used in many probabilistic inferences (cite lots of stuff).
+The age of \Gaia\ is also (perhaps coincidentally) the age of principled
+probabilistic inference in astrophysics.
+For this reason, the \Gaia\ data are being used in many probabilistic
+inferences (for example, cite lots of stuff).
+These probabilistic inferences take many forms, and have different levels
+of hierarchical complexity, but all of them require that there be, at base,
+a likelihood function, or a probability for the \Gaia\ data as a function
+of model parameters.
+One confusing question investigators face is: What is the \Gaia\ data?
+And how do I write a probability over it, when all I get to see is the
+official Catalog release, with photometric and astrometric parameters and associated
+uncertainties?
 
-These inferences implicitly or explicitly construct a locally Gaussian
-likelihood function for each object.
+There is a standard answer, but in most inferences it appears only implicitly:
+The inferences presume that the \Gaia\ Catalog entries can be used to construct
+a likelihood function approximation, which is appropriate for use in inferences.
+In all work so far, this likelihood function has been given a Gaussian form,
+with mean and variance set to Catalog values.
+This implicit assumption is what I am attempting to make explicit in this \documentname.
 
-There is work on probabilistic catalogs (cite lots of stuff). This work
-will be useless if it can't be used to construct a LF in the end.
+An investigator can take one of (at least) two attitudes towards the \Gaia\ data:
+The investigator can think of the \Gaia\ Catalog as being the data, in which case
+the assumption is that the generative process for the \Gaia\ Catalog entries is
+itself Gaussian.
+Or the investigator can think of the \Gaia\ data as taking some raw form
+from which the Catalog has been derived (by, say, pipelines),
+in which case the Catalog contains parameters of a Gaussian
+approximation to the likelihood function for those raw data.
+It turns out it doesn't matter which attitude the investigator takes; the
+proposal for the \Gaia\ likelihood function made here works in either case;
+the two attitudes are identical in the limit that the Catalog contains
+\emph{sufficient statistics} of the raw data.
+Indeed, it is almost a definition of sufficient statistics that---if you have them---you
+can use them to construct a good approximation to the likelihood function for the
+raw data.
+All that said, we are going to take the latter attitude: That is, that the
+\Gaia\ data are raw data, and the Catalog is delivering statistics that can
+be used to construct an approximation to the likelihood function.
+
+One contemporary trend in astrophysics is to think about replacing rigid
+catalogs with something more probabilistic, possibly representing uncertainties
+through a sampling in catalog space (cite Brewer, Portillo, others).
+This idea is also informing some of the expected high-level outputs from
+the \Gaia\ Mission too.
+These ideas are interesting and new, and connect to the age of principled
+probabilistic inference in which we find ourselves.
+However, these ideas also come with substantial risk:
+In many cases, a posterior sampling or posterior probability information
+does not successfully encode sufficient likelihood information to permit
+downstream analyses (with, say, different priors).
+That is, investigators generally want---from an experiment or data source---likelihood
+information, not posterior information.
+This is because different investigators can have very different priors,
+even qualitatively different priors; they won't agree on anything about the
+data except what new information those data bring.
+This all relates to the subjectivity of inference:
+Experiments ought to produce likelihood updates for everyone, no matter
+what their prior beliefs.
 
 \paragraph{A likelihood function for \Gaia}
-Can think of this as a LF given the catalog data. Or of the raw data.
+In the simplest possible case, imagine that we are trying to infer
+the true distance $d_n$ to a star $n$ given the \Gaia\ data $y$, and nothing else
+(which is the goal of CITE TRI--CORYN).
+The inference looks like this:
+\begin{eqnarray}
+p(d_n\given y) = \frac{1}{Z_n}\,p(y\given d_n)\,p(d_n)
+\quad ,
+\end{eqnarray}
+where
+$p(d_n\given y)$ is the posterior pdf for the true distance given the data,
+$Z_n$ is a normalization constant,
+$p(y\given d_n)$ is the likelihood (or the pdf for the data given the distance),
+and $p(d_n)$ is the prior pdf for the true distance.
+In order to perform this inference, we need the likelihood and the prior.
+
+Note that, in order to write down these schematic equations,
+we don't need to be perfectly specific here about what, exactly,
+is the data $y$.
+It could be all the \Gaia\ data in its entirety,
+it could be the \Gaia\ data pertaining to this particular star $n$,
+or it could be the catalog entry in the \Gaia\ Catalog on star $n$.
+Nothing about this formalism changes with these different choices,
+although there might be some implicit marginalizations over nuisance
+parameters in some of these particular cases.
+That is, what you explicitly put in for the likelihood function $p(y\given d_n)$
+will depend on what you consider to be the data $y$, but the formal structure
+will be identical.
+
+My goal here is to promote a particular choice for this likelihood function.
+Getting straight to the point, in this simplest possible case, 
+\begin{eqnarray}
+p(y\given d_n) &=& p(y\given\varpi_n)
+\\
+\varpi_n &\equiv& \frac{1\,\AU}{d_n}
+\\
+p(y\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi,n})
+\quad ,
+\end{eqnarray}
+where
+$\varpi_n$ is the true parallax to star $n$ (implicitly in radians here),
+$p(y\given\varpi_n)$ is the likelihood as a function of parallax (rather than distance),
+$A_n$ is a normalization (and units-conversion) constant,
+$N(x\given\mu,V)$ is the Gaussian function for $x$ given mean $\mu$ and variance $V$,
+$\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
+and $\hat{\sigma}_{\varpi,n}$ is the value given for the uncertainty on that parallax.
+This choice for the likelihood function is Gaussian, and presumes that the
+Catalog values for the parallax and its uncertainty are accurate and represent
+a likelihood maximum and width.
+It is the choice made in many publications (CITE).
+
+A few technical notes related to dimensions or units.
+Because the data $y$ and
+the true parallax $\varpi_n$ have (in general, though not always) different units,
+the amplitude $A_n$ will have (in general) non-trivial units.
+Also, you might think
+that the conversion from distance $d_n$ to parallax $\varpi_n$ would bring in some
+Jacobian factors of the form $||\dd d_n/\dd\varpi_n||$.
+However, because the true distance only parameterizes a function of the data,
+or because the likelihood function has units of per-data (and not per-parallax),
+the change of parameters doesn't bring a change of units, at least not in the
+likelihood function (it would bring a change of units in the posterior pdf, or the
+prior pdf).
+I say more about these units issues elsewhere (CITE HOGG).
+
+As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
 These will be identical if the catalog contains a set of sufficient statistics
 for the raw data!
 Attitude taken here is that we care about the raw data likelihood.
@@ -77,6 +201,7 @@ What about star--star covariances? These are being ignored too, but they
 will be small in the long run (cite Holl?).
 
 What about non-Gaussianity? There is nothing we can do about that.
+Note about conservatism and Gaussianity...
 
 Why are there negative parallaxes? There will be, and you can think about
 it two ways: Linear fitting will do this at low s/n in general. And the
