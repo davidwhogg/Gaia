@@ -6,12 +6,13 @@ role in *Gaia*!
 
 ### Author:
 
-- [David W. Hogg](http://cosmo.nyu.edu/hogg/), (NYU) (MPIA)
+- [David W. Hogg](http://cosmo.nyu.edu/hogg/), (NYU) (MPIA) (Flatiron)
 
 ### License:
 
-Copyright 2012, 2016 David W. Hogg (NYU).  All rights reserved.
+Copyright 2012, 2016, 2018 David W. Hogg (NYU).  All rights reserved.
 
 ## Projects
-- Analyze Gaia attitude model choices.
+- A likelihood function for the *Gaia* data.
+- Analyze *Gaia* attitude model choices.
 - Argue about stellar parameterizations and inference.
