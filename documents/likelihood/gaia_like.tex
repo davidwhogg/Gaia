@@ -1,9 +1,7 @@
-\documentclass[12pt]{article}
+\documentclass[12pt, modern]{aastex62}
 
-\addtolength{\topmargin}{-0.75in}
-\addtolength{\textheight}{2.00in}
-\setlength{\headsep}{0in}
-\setlength{\headheight}{0in}
+\addtolength{\topmargin}{-0.25in}
+\addtolength{\textheight}{0.50in}
 
 \newcommand{\Gaia}{\textsl{Gaia}}
 \newcommand{\documentname}{\textsl{Note}}
@@ -15,22 +13,23 @@
 \newcommand{\T}{^{\mathsf{T}}}
 \newcommand{\inv}{^{-1}}
 
+\shorttitle{a likelihood for gaia}
+\shortauthors{david w hogg}
+
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
 \noindent
-\textbf{A likelihood function for the \Gaia\ Data}\footnote{%
+\title{A likelihood function for the \Gaia\ Data\footnote{%
   Copyright 2018 the author. Feel free to reproduce and redistribute, provided
-  that you make no changes whatsoever.}
-\bigskip
+  that you make no changes whatsoever.}}
 
-\noindent
-by \textbf{David W. Hogg}\footnote{%
-\textsl{Center for Cosmology and Particle Physics, Department of Physics, New York University}, and
-\textsl{Center for Data Science, New York University}, and
-\textsl{Max-Planck-Institut f\"ur Astronomie, Heidelberg}, and
-\textsl{Flatiron Institute, New York City}}
+\author[0000-0003-2866-9403]{David W. Hogg}
+\affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726~Broadway, New York, NY 10003, USA}
+\affil{Center for Data Science, New York University, 60 Fifth Ave, New York, NY 10011, USA}
+\affil{Max-Planck-Institut f\"ur Astronomie, K\"onigstuhl 17, D-69117 Heidelberg}
+\affil{Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA}
 
-\paragraph{Abstract:}
+\begin{abstract}
 When we perform probabilistic inferences with the \Gaia\ Mission data,
 we technically require
 a \emph{likelihood function}, or a probability of the (raw-ish) data as a function
@@ -54,8 +53,9 @@ this assumption. Generalizing beyond \Gaia,
 it is important to downstream users of any catalog products
 that they deliver likelihood information about the fundamental data;
 this is a challenge for the probabilistic catalogs of the future.
+\end{abstract}
 
-\paragraph{Introduction:}
+\section{Introduction:}
 The age of \Gaia\ is also (perhaps coincidentally) the age of principled
 probabilistic inference in astrophysics.
 For this reason, the \Gaia\ data are being used in many probabilistic
@@ -117,7 +117,7 @@ The second is the subjectivity of inference, or the principle that
 experiments ought to produce likelihood updates for everyone, no matter
 what their prior beliefs.
 
-\paragraph{A likelihood function for \Gaia}
+\section{A likelihood function for \Gaia}
 In the simplest possible case, imagine that we are trying to infer
 the true distance $d_n$ to a star $n$ given the \Gaia\ data $y_n$ that
 pertain to star $n$, and nothing else
@@ -277,7 +277,7 @@ None of that hierarchical structure or marginalization changes the story here;
 which is that the internal likelihood $p(y_n\given X_n)$ should be given the
 Gaussian form in \equationname~(\ref{eq:like}).
 
-\paragraph{Discussion:}
+\section{Discussion:}
 In order to perform inferences
 with the \Gaia\ data, we need a likelihood function.
 The main point of this \documentname\ is that a sensible likelihood function
