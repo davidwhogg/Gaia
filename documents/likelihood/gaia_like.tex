@@ -237,11 +237,25 @@ discussion whether they optimize
 the nuisance parameters or marginalize them out.
 
 Of course, most inferences are not as simple as the inference described by
-\equationname~(\ref{eq:inference})!
+\equationname~(\ref{eq:inference}).
 Except in rare cases, we aren't just trying to find out the distance to a single
-star.
-...HOGG: Make a more complex hierarchical model with different parameters. That's
-a new kind of likelihood function too.
+star!
+We usually are trying to fit some model of the world, or of some set of stars,
+or calibrate a color-luminosity relationship, or something like that (CITE VARIOUS).
+In these cases, there is a model $p(X_n\given\theta)$ which says what we expect
+for star $n$'s true astrometric quantites $X_n$, given a set of parameters $\theta$
+of our larger model.
+Within that larger model, the likelihood for a single star becomes
+\begin{eqnarray}
+p(y_n\given\theta) &=& \int p(y_n\given X_n)\,p(X_n\given\theta)\,\dd X_n
+\quad ,
+\end{eqnarray}
+where we have marginalized out the true value.
+These marginalized likelihoods can be multiplied together (or added in the log,
+better) to make likelihoods for collections of stars.
+None of that hierarchical structure or marginalization changes the story here;
+which is that the internal likelihood $p(y_n\given X_n)$ should be given the
+Gaussian form in \equationname~(\ref{eq:like}).
 
 \paragraph{Discussion:}
 Summarize basic point here.
