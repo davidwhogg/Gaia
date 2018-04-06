@@ -153,7 +153,7 @@ p(y\given d_n) &=& p(y\given\varpi_n)
 \\
 \varpi_n &\equiv& \frac{1\,\AU}{d_n}
 \\
-p(y\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi,n})
+p(y\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi n})
 \label{eq:onedlike}
 \quad ,
 \end{eqnarray}
@@ -163,7 +163,7 @@ $p(y\given\varpi_n)$ is the likelihood as a function of parallax (rather than di
 $A_n$ is a normalization (and units-conversion) constant,
 $N(\xi\given\mu,V)$ is the Gaussian function for $\xi$ given mean $\mu$ and variance $V$,
 $\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
-and $\hat{\sigma}_{\varpi,n}$ is the value given for the uncertainty on that parallax.
+and $\hat{\sigma}_{\varpi n}$ is the value given for the uncertainty on that parallax.
 The amplitude $A_n$ is not given in the \Gaia\ Catalog (though it could have been),
 but it turns out---because of that factor of $1/Z$ in
 \equationname~(\ref{eq:inference})---it isn't needed for parameter-estimation-like
@@ -176,7 +176,7 @@ a likelihood maximum and width.
 It is the choice made in many publications (CITE).
 It has the property that the likelihood peaks when the true parallax
 matches the Catalog-reported parallax,
-and the function is symmetric in parallax space---not distance space---because
+and that the function is symmetric in parallax space---not distance space---because
 \Gaia\ measures geometric parallaxes, not distances.
 The likelihood function is a pdf for the data, evaluated at the data (which,
 for a Bayesian, are fixed), and therefore although it is a pdf over data,
@@ -206,7 +206,7 @@ that the investigator is modifying, but the (say) $D=5$ astrometric quantities
 or a non-trivial subset of $D$ of these.
 In this case the likelihood becomes
 \begin{eqnarray}
-p(y\given X_n) &=& A_n\,N(X_n\given\hat{X}_n,\hat{C}_{X,n})
+p(y\given X_n) &=& A_n\,N(X_n\given\hat{X}_n,\hat{C}_{Xn})
 \label{eq:like}
 \quad ,
 \end{eqnarray}
@@ -214,22 +214,38 @@ where now
 $X_n$ is a $D$-vector of true values for the astrometric quantities for star $n$,
 $p(y\given X_n)$ is the likelihood as a function of that vector of true quantities,
 $A_n$ is again a normalization (and units-conversion) constant,
-$N(\xi\given\mu,V)$ is now the $D$-dimensional Gaussian function for $\xi$ given mean $D$-vector$\mu$ and $D\times D$ covariance matrix $V$,
+$N(\xi\given\mu,V)$ is now the Gaussian function for $D$-vector $\xi$ given mean $D$-vector $\mu$ and $D\times D$ covariance matrix $V$,
 $\hat{X}_n$ is the $D$-vector of values given for the $D$ astrometric quantities for star $n$ in the \Gaia\ Catalog,
-and $\hat{C}_{X,n}$ is the value given for the $D\times D$ covariance matrix for that
+and $\hat{C}_{Xn}$ is the value given for the $D\times D$ covariance matrix for that
 $D$-vector.
 Again, the assumption here is that the likelihood function has Gaussian form, peaked
 when the true values match the Catalog values, and symmetric in the quantities
 reported in the Catalog (which are celestial positions, proper motions, and parallaxes).
 
-HOGG: There are nuisance parameters. We are going to assume that the Gaia team either
-optimizes or marginalizes over these. The difference between these options won't
-be big.
+The likelihood functions of (\ref{eq:onedlike}) and (\ref{eq:like}) are
+probabilities of the observed \Gaia\ data as a
+function of astrometric parameters.
+But there are many more parameters, including photometric, point-spread-function,
+and spacecraft-attitude parameters as well, all of which contribute to the probability
+for the data.
+How do we deal with these nuisance parameters, or how can we ignore them?
+Implicitly, I am assuming here that the \Gaia\ Catalog team has either optimized
+or marginalized out these nuisance parameters.
+Since the \Gaia\ Mission delivers immense signal-to-noise on these nuisance
+parameters in most cases, it won't matter much, technically, to this
+discussion whether they optimize
+the nuisance parameters or marginalize them out.
 
-HOGG: Make a more complex hierarchical model with different parameters. That's
+Of course, most inferences are not as simple as the inference described by
+\equationname~(\ref{eq:inference})!
+Except in rare cases, we aren't just trying to find out the distance to a single
+star.
+...HOGG: Make a more complex hierarchical model with different parameters. That's
 a new kind of likelihood function too.
 
 \paragraph{Discussion:}
+Summarize basic point here.
+
 Why did you write this note? I am not sure. It is just a restate of the
 obvious.
 
