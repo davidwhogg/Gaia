@@ -7,6 +7,7 @@
 
 \newcommand{\Gaia}{\textsl{Gaia}}
 \newcommand{\documentname}{\textsl{Note}}
+\newcommand{\equationname}{equation}
 
 \newcommand{\AU}{\mathrm{A.U.}}
 \newcommand{\dd}{\mathrm{d}}
@@ -96,7 +97,7 @@ One contemporary trend in astrophysics is to think about replacing rigid
 catalogs with something more probabilistic, possibly representing uncertainties
 through a sampling in catalog space (cite Brewer, Portillo, others).
 This idea is also informing some of the expected high-level outputs from
-the \Gaia\ Mission too.
+the \Gaia\ Mission too (CITE).
 These ideas are interesting and new, and connect to the age of principled
 probabilistic inference in which we find ourselves.
 However, these ideas also come with substantial risk:
@@ -108,8 +109,10 @@ information, not posterior information.
 This is because different investigators can have very different priors,
 even qualitatively different priors; they won't agree on anything about the
 data except what new information those data bring.
-This all relates to the subjectivity of inference:
-Experiments ought to produce likelihood updates for everyone, no matter
+This all flows from two principles: The first is the likelihood principle,
+which states that new knowledge comes in likelihood form.
+The second is the subjectivity of inference, or the principle that
+experiments ought to produce likelihood updates for everyone, no matter
 what their prior beliefs.
 
 \paragraph{A likelihood function for \Gaia}
@@ -119,6 +122,7 @@ the true distance $d_n$ to a star $n$ given the \Gaia\ data $y$, and nothing els
 The inference looks like this:
 \begin{eqnarray}
 p(d_n\given y) = \frac{1}{Z_n}\,p(y\given d_n)\,p(d_n)
+\label{eq:inference}
 \quad ,
 \end{eqnarray}
 where
@@ -145,31 +149,50 @@ My goal here is to promote a particular choice for this likelihood function.
 Getting straight to the point, in this simplest possible case, 
 \begin{eqnarray}
 p(y\given d_n) &=& p(y\given\varpi_n)
+\label{eq:gotoparallax}
 \\
 \varpi_n &\equiv& \frac{1\,\AU}{d_n}
 \\
 p(y\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi,n})
+\label{eq:onedlike}
 \quad ,
 \end{eqnarray}
 where
 $\varpi_n$ is the true parallax to star $n$ (implicitly in radians here),
 $p(y\given\varpi_n)$ is the likelihood as a function of parallax (rather than distance),
 $A_n$ is a normalization (and units-conversion) constant,
-$N(x\given\mu,V)$ is the Gaussian function for $x$ given mean $\mu$ and variance $V$,
+$N(\xi\given\mu,V)$ is the Gaussian function for $\xi$ given mean $\mu$ and variance $V$,
 $\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
 and $\hat{\sigma}_{\varpi,n}$ is the value given for the uncertainty on that parallax.
-This choice for the likelihood function is Gaussian, and presumes that the
+The amplitude $A_n$ is not given in the \Gaia\ Catalog (though it could have been),
+but it turns out---because of that factor of $1/Z$ in
+\equationname~(\ref{eq:inference})---it isn't needed for parameter-estimation-like
+inferences.
+
+This choice (\ref{eq:onedlike}) for the likelihood function is Gaussian,
+and presumes that the
 Catalog values for the parallax and its uncertainty are accurate and represent
 a likelihood maximum and width.
 It is the choice made in many publications (CITE).
+It has the property that the likelihood peaks when the true parallax
+matches the Catalog-reported parallax,
+and the function is symmetric in parallax space---not distance space---because
+\Gaia\ measures geometric parallaxes, not distances.
+The likelihood function is a pdf for the data, evaluated at the data (which,
+for a Bayesian, are fixed), and therefore although it is a pdf over data,
+it is really a function of the true parallax:
+The likelihood function (\ref{eq:onedlike}) returns the answer to the question:
+How probable are the observed data, if $\varpi_n$ is the true parallax of
+star $n$?
 
 A few technical notes related to dimensions or units.
 Because the data $y$ and
 the true parallax $\varpi_n$ have (in general, though not always) different units,
-the amplitude $A_n$ will have (in general) non-trivial units.
+the unknown amplitude $A_n$ will have (in general) non-trivial units.
 Also, you might think
-that the conversion from distance $d_n$ to parallax $\varpi_n$ would bring in some
-Jacobian factors of the form $||\dd d_n/\dd\varpi_n||$.
+that the conversion from distance $d_n$ to parallax $\varpi_n$
+in \equationname~(\ref{eq:gotoparallax})
+would bring in some Jacobian factors of the form $||\dd d_n/\dd\varpi_n||$.
 However, because the true distance only parameterizes a function of the data,
 or because the likelihood function has units of per-data (and not per-parallax),
 the change of parameters doesn't bring a change of units, at least not in the
@@ -177,23 +200,43 @@ likelihood function (it would bring a change of units in the posterior pdf, or t
 prior pdf).
 I say more about these units issues elsewhere (CITE HOGG).
 
-As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
-These will be identical if the catalog contains a set of sufficient statistics
-for the raw data!
-Attitude taken here is that we care about the raw data likelihood.
+In a more general inference, it is not just the parallax (or distance)
+that the investigator is modifying, but the (say) $D=5$ astrometric quantities
+(celestial positions, proper motions, and parallax)
+or a non-trivial subset of $D$ of these.
+In this case the likelihood becomes
+\begin{eqnarray}
+p(y\given X_n) &=& A_n\,N(X_n\given\hat{X}_n,\hat{C}_{X,n})
+\label{eq:like}
+\quad ,
+\end{eqnarray}
+where now
+$X_n$ is a $D$-vector of true values for the astrometric quantities for star $n$,
+$p(y\given X_n)$ is the likelihood as a function of that vector of true quantities,
+$A_n$ is again a normalization (and units-conversion) constant,
+$N(\xi\given\mu,V)$ is now the $D$-dimensional Gaussian function for $\xi$ given mean $D$-vector$\mu$ and $D\times D$ covariance matrix $V$,
+$\hat{X}_n$ is the $D$-vector of values given for the $D$ astrometric quantities for star $n$ in the \Gaia\ Catalog,
+and $\hat{C}_{X,n}$ is the value given for the $D\times D$ covariance matrix for that
+$D$-vector.
+Again, the assumption here is that the likelihood function has Gaussian form, peaked
+when the true values match the Catalog values, and symmetric in the quantities
+reported in the Catalog (which are celestial positions, proper motions, and parallaxes).
 
-There are nuisance parameters. We are going to assume that the Gaia team either
+HOGG: There are nuisance parameters. We are going to assume that the Gaia team either
 optimizes or marginalizes over these. The difference between these options won't
 be big.
 
-Give the K-d formula. Cite various.
-
-Make a more complex hierarchical model with different parameters. That's
+HOGG: Make a more complex hierarchical model with different parameters. That's
 a new kind of likelihood function too.
 
 \paragraph{Discussion:}
 Why did you write this note? I am not sure. It is just a restate of the
 obvious.
+
+As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
+These will be identical if the catalog contains a set of sufficient statistics
+for the raw data!
+Attitude taken here is that we care about the raw data likelihood.
 
 What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
 noise is close to Gaussian, and the signal-to-noise is high.
