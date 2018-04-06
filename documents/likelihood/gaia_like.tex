@@ -117,49 +117,49 @@ what their prior beliefs.
 
 \paragraph{A likelihood function for \Gaia}
 In the simplest possible case, imagine that we are trying to infer
-the true distance $d_n$ to a star $n$ given the \Gaia\ data $y$, and nothing else
+the true distance $d_n$ to a star $n$ given the \Gaia\ data $y_n$ that
+pertain to star $n$, and nothing else
 (which is the goal of CITE TRI--CORYN).
 The inference looks like this:
 \begin{eqnarray}
-p(d_n\given y) = \frac{1}{Z_n}\,p(y\given d_n)\,p(d_n)
+p(d_n\given y_n) = \frac{1}{Z_n}\,p(y_n\given d_n)\,p(d_n)
 \label{eq:inference}
 \quad ,
 \end{eqnarray}
 where
-$p(d_n\given y)$ is the posterior pdf for the true distance given the data,
+$p(d_n\given y_n)$ is the posterior pdf for the true distance given the data,
 $Z_n$ is a normalization constant,
-$p(y\given d_n)$ is the likelihood (or the pdf for the data given the distance),
+$p(y_n\given d_n)$ is the likelihood (or the pdf for the data given the distance),
 and $p(d_n)$ is the prior pdf for the true distance.
 In order to perform this inference, we need the likelihood and the prior.
 
 Note that, in order to write down these schematic equations,
 we don't need to be perfectly specific here about what, exactly,
-is the data $y$.
-It could be all the \Gaia\ data in its entirety,
-it could be the \Gaia\ data pertaining to this particular star $n$,
+is the data $y_n$.
+It could be all the raw \Gaia\ data pertaining to this particular star $n$,
 or it could be the catalog entry in the \Gaia\ Catalog on star $n$.
 Nothing about this formalism changes with these different choices,
 although there might be some implicit marginalizations over nuisance
 parameters in some of these particular cases.
-That is, what you explicitly put in for the likelihood function $p(y\given d_n)$
-will depend on what you consider to be the data $y$, but the formal structure
+That is, what you explicitly put in for the likelihood function $p(y_n\given d_n)$
+will depend on what you consider to be the data $y_n$, but the formal structure
 will be identical.
 
 My goal here is to promote a particular choice for this likelihood function.
 Getting straight to the point, in this simplest possible case, 
 \begin{eqnarray}
-p(y\given d_n) &=& p(y\given\varpi_n)
+p(y_n\given d_n) &=& p(y_n\given\varpi_n)
 \label{eq:gotoparallax}
 \\
 \varpi_n &\equiv& \frac{1\,\AU}{d_n}
 \\
-p(y\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi n})
+p(y_n\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\varpi n})
 \label{eq:onedlike}
 \quad ,
 \end{eqnarray}
 where
 $\varpi_n$ is the true parallax to star $n$ (implicitly in radians here),
-$p(y\given\varpi_n)$ is the likelihood as a function of parallax (rather than distance),
+$p(y_n\given\varpi_n)$ is the likelihood as a function of parallax (rather than distance),
 $A_n$ is a normalization (and units-conversion) constant,
 $N(\xi\given\mu,V)$ is the Gaussian function for $\xi$ given mean $\mu$ and variance $V$,
 $\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
@@ -186,7 +186,7 @@ How probable are the observed data, if $\varpi_n$ is the true parallax of
 star $n$?
 
 A few technical notes related to dimensions or units.
-Because the data $y$ and
+Because the data $y_n$ and
 the true parallax $\varpi_n$ have (in general, though not always) different units,
 the unknown amplitude $A_n$ will have (in general) non-trivial units.
 Also, you might think
@@ -206,13 +206,13 @@ that the investigator is modifying, but the (say) $D=5$ astrometric quantities
 or a non-trivial subset of $D$ of these.
 In this case the likelihood becomes
 \begin{eqnarray}
-p(y\given X_n) &=& A_n\,N(X_n\given\hat{X}_n,\hat{C}_{Xn})
+p(y_n\given X_n) &=& A_n\,N(X_n\given\hat{X}_n,\hat{C}_{Xn})
 \label{eq:like}
 \quad ,
 \end{eqnarray}
 where now
 $X_n$ is a $D$-vector of true values for the astrometric quantities for star $n$,
-$p(y\given X_n)$ is the likelihood as a function of that vector of true quantities,
+$p(y_n\given X_n)$ is the likelihood as a function of that vector of true quantities,
 $A_n$ is again a normalization (and units-conversion) constant,
 $N(\xi\given\mu,V)$ is now the Gaussian function for $D$-vector $\xi$ given mean $D$-vector $\mu$ and $D\times D$ covariance matrix $V$,
 $\hat{X}_n$ is the $D$-vector of values given for the $D$ astrometric quantities for star $n$ in the \Gaia\ Catalog,
