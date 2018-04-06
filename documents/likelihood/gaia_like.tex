@@ -278,34 +278,61 @@ which is that the internal likelihood $p(y_n\given X_n)$ should be given the
 Gaussian form in \equationname~(\ref{eq:like}).
 
 \paragraph{Discussion:}
-Summarize basic point here.
+In order to perform inferences
+with the \Gaia\ data, we need a likelihood function.
+The main point of this \documentname\ is that a sensible likelihood function
+stand-in or surrogate can be constructed from the \Gaia\ Catalog, under the assumption
+that the Catalog contains likelihood information, and accurate (and sufficient)
+statistics of the data.
+I give explicit forms for the likelihood function surrogate in
+\equationname s~(\ref{eq:onedlike}) and (\ref{eq:like}).
+These likelihood functional forms are not new---they are used in multiple places
+in the literature (for example, CITE)---the point of this is to make the
+likelihood function assumptions explicit.
 
-Why did you write this note? I am not sure. It is just a restate of the
-obvious.
-
-As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
+HOGG: As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
 These will be identical if the catalog contains a set of sufficient statistics
 for the raw data!
 Attitude taken here is that we care about the raw data likelihood.
 
-What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
+HOGG: What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
 noise is close to Gaussian, and the signal-to-noise is high.
 
-What about star--star covariances? These are being ignored too, but they
+HOGG: What about star--star covariances? These are being ignored too, but they
 will be small in the long run (cite Holl?).
 
-And, relatedly, can we really split the data into disjoint $y_n$ subsets?
+HOGG: And, relatedly, can we really split the data into disjoint $y_n$ subsets?
 No!
 
-What about non-Gaussianity? There is nothing we can do about that.
-Note about conservatism and Gaussianity...
+\emph{What about non-Gaussianity?} Everything written here
+ explicitly assumes that the \Gaia\ noise
+model is correct and that the noise is entirely Gaussian.
+That's probably a bad assumption in detail,
+especially as there are cosmic rays and there is binary (and triple)
+contamination and stellar blending and crowding and so on.
+However, it is the standard assumption across \Gaia\ science at present (CITE THINGS).
 
-Why are there negative parallaxes? There will be, and you can think about
+One thing I like to say about Gaussianity is that if you are given a mean
+and a variance for a distribution, and you believe those statistics to be
+accurate, then the Gaussian is the \emph{most conservative} assumption one
+can make.
+It is the maximum-entropy distribution with that mean and variance!
+Of course this point is something of a red herring, because it is precisely
+when the noise is non-Gaussian that it will be impossible to obtain an
+accurate estimate of the mean and variance.
+The point here is that the Gaussianity assumption in this work is strongly connected
+to the assumption that the \Gaia\ Catalog is delivering accurate statistics of
+the data.
+
+HOGG: What about binaries and so on? Hard to see how the \Gaia\ Collaboration can
+maintain the likelihood framework in this case...
+
+HOGG: Why are there negative parallaxes? There will be, and you can think about
 it two ways: Linear fitting will do this at low s/n in general. And the
 LF approximation might require it!
 They are required if the team is delivering likelihood information.
 
-What are we doing with our inferences? If we are producing true posterior
+HOGG: What are we doing with our inferences? If we are producing true posterior
 information (as with cite this and cite that), then our inferences may not
 be re-usable by anyone. This is a danger for all of us. And it isn't enough
 to report our priors, because: Reproducibility, support, etc.
