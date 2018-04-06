@@ -12,6 +12,8 @@
 \newcommand{\AU}{\mathrm{A.U.}}
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\given}{\,|\,}
+\newcommand{\T}{^{\mathsf{T}}}
+\newcommand{\inv}{^{-1}}
 
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing
 
@@ -169,6 +171,15 @@ but it turns out---because of that factor of $1/Z$ in
 \equationname~(\ref{eq:inference})---it isn't needed for parameter-estimation-like
 inferences.
 
+It is more stable numerically to do inferences with log probabilities.
+In the log,
+\begin{eqnarray}
+\ln p(y_n\given\varpi_n) &=& Q_n - \frac{1}{2}\,\frac{[\varpi_n - \hat{\varpi_n}]^2}{\hat{\sigma}^2_{\varpi n}}
+\\
+Q_n &\equiv& \ln\frac{A_n}{\sqrt{2\pi\,\hat{\sigma}^2_{\varpi n}}}
+\quad .
+\end{eqnarray}
+
 This choice (\ref{eq:onedlike}) for the likelihood function is Gaussian,
 and presumes that the
 Catalog values for the parallax and its uncertainty are accurate and represent
@@ -221,6 +232,14 @@ $D$-vector.
 Again, the assumption here is that the likelihood function has Gaussian form, peaked
 when the true values match the Catalog values, and symmetric in the quantities
 reported in the Catalog (which are celestial positions, proper motions, and parallaxes).
+In the log, this is
+\begin{eqnarray}
+\ln p(y_n\given X_n) &=& Q_n - \frac{1}{2}\,[X_n - \hat{X}_n]\T\cdot\hat{C}_{Xn}\inv\cdot [X_n - \hat{X}_n]
+\\
+Q_n &\equiv& \ln\frac{A_n}{\sqrt{||2\pi\,\hat{C}_{Xn}||}}
+\quad ,
+\end{eqnarray}
+where we have implicitly assumed that the $D$-vectors are column vectors.
 
 The likelihood functions of (\ref{eq:onedlike}) and (\ref{eq:like}) are
 probabilities of the observed \Gaia\ data as a
@@ -250,9 +269,10 @@ Within that larger model, the likelihood for a single star becomes
 p(y_n\given\theta) &=& \int p(y_n\given X_n)\,p(X_n\given\theta)\,\dd X_n
 \quad ,
 \end{eqnarray}
-where we have marginalized out the true value.
-These marginalized likelihoods can be multiplied together (or added in the log,
-better) to make likelihoods for collections of stars.
+where we have marginalized out the true astrometric properties $X_n$ for star $n$.
+These marginalized likelihoods $p(y_n\given\theta)$
+can be multiplied together (or, better, added in the log)
+to make likelihoods for collections of stars.
 None of that hierarchical structure or marginalization changes the story here;
 which is that the internal likelihood $p(y_n\given X_n)$ should be given the
 Gaussian form in \equationname~(\ref{eq:like}).
