@@ -1257,7 +1257,7 @@ the#1\endcsname}
 \goodbreak
     \hbox to\textwidth{\hss\normalsize REFERENCES\hss}
 \vspace{6pt}\parskip=0pt
-\twocolumngrid 
+\onecolumngrid 
 \par
  \raggedright
 \small

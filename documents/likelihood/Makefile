@@ -2,7 +2,7 @@ all: gaia_like.pdf
 
 .SUFFIXES: .tex .dvi .ps .pdf .mp .eps
 
-%.pdf: %.tex
+%.pdf: %.tex gaia.bib
 	pdflatex $<
 	bibtex $*
 	pdflatex $<
