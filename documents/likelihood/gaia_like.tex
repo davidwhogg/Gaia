@@ -66,13 +66,13 @@ this is a challenge for the probabilistic catalogs of the future.
 \section{Introduction}
 The age of \Gaia\ is also (perhaps coincidentally) the age of principled
 probabilistic inference in astrophysics.
-For this reason, the \Gaia\ data are being used in many probabilistic
+For this reason, the \Gaia\ (\citealt{gaia}) data are being used in many probabilistic
 inferences (for example, \citealt{tri3, hawkins, sesar}).
 These probabilistic inferences take many forms, and have different levels
 of hierarchical complexity, but all of them require that there be, at base,
 a likelihood function, or a probability for the \Gaia\ data as a function
 of model parameters.
-One confusing question investigators face is: What is the \Gaia\ data?
+One confusing question investigators face is: What constitutes the \Gaia\ data?
 And how do I write a probability over it, when all I get to see is the
 official Catalog release, with photometric and astrometric parameters and associated
 uncertainties?
@@ -311,7 +311,7 @@ Attitude taken here is that we care about the raw data likelihood.
 
 HOGG: What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
 noise is close to Gaussian, and the signal-to-noise is high. These are wrong for
-\TGAS\ (\citealt{michalik}), but the prior was so broad, it won't matter in practice (and explain how using the LF from Tycho as the prior for Gaia is a flat prior). TECHNICALLY, you should use
+\TGAS\ (\citealt{michalik, dr1}), but the prior was so broad, it won't matter in practice (and explain how using the LF from Tycho as the prior for Gaia is a flat prior). TECHNICALLY, you should use
 the ratio of the Gaussian in \equationname~(\ref{eq:onedlike}) or (\ref{eq:like}) with
 a ratio of this Gaussian to the prior Gaussian, which is far broader. That would be
 a difference in log space.
