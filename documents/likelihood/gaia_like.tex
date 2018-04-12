@@ -49,8 +49,8 @@ value and uncertainty are the mean and root-variance of a Gaussian
 function that can stand in for the true likelihood function.
 This is the implicit assumption in most \Gaia\ literature to date;
 my only goal here is to make the assumption explicit.
-Certain technical choices by the Mission team could invalidate
-this assumption. Generalizing beyond \Gaia,
+Certain technical choices by the Mission team slightly invalidate
+this assumption for DR1 (TGAS), but not seriously. Generalizing beyond \Gaia,
 it is important to downstream users of any catalog products
 that they deliver likelihood information about the fundamental data;
 this is a challenge for the probabilistic catalogs of the future.
@@ -300,7 +300,11 @@ for the raw data!
 Attitude taken here is that we care about the raw data likelihood.
 
 HOGG: What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
-noise is close to Gaussian, and the signal-to-noise is high.
+noise is close to Gaussian, and the signal-to-noise is high. These are wrong for
+TGAS, but the prior was so broad, it won't matter in practice. TECHNICALLY, you should use
+the ratio of the Gaussian in \equationname~(\ref{eq:onedlike}) or (\ref{eq:like}) with
+a ratio of this Gaussian to the prior Gaussian, which is far broader. That would be
+a difference in log space.
 
 HOGG: What about star--star covariances? These are being ignored too, but they
 will be small in the long run (cite Holl?).
