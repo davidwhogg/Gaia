@@ -4,7 +4,11 @@
 \addtolength{\textheight}{0.50in}
 \setlength{\parindent}{\baselineskip}
 
+\newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\Gaia}{\textsl{Gaia}}
+\newcommand{\DRone}{\textsl{\acronym{DR1}}}
+\newcommand{\DRtwo}{\textsl{\acronym{DR2}}}
+\newcommand{\TGAS}{\textsl{\acronym{TGAS}}}
 \newcommand{\documentname}{\textsl{Note}}
 \newcommand{\equationname}{equation}
 
@@ -50,7 +54,7 @@ function that can stand in for the true likelihood function.
 This is the implicit assumption in most \Gaia\ literature to date;
 my only goal here is to make the assumption explicit.
 Certain technical choices by the Mission team slightly invalidate
-this assumption for DR1 (TGAS), but not seriously. Generalizing beyond \Gaia,
+this assumption for \DRone\ (\TGAS), but not seriously. Generalizing beyond \Gaia,
 it is important to downstream users of any catalog products
 that they deliver likelihood information about the fundamental data;
 this is a challenge for the probabilistic catalogs of the future.
@@ -63,7 +67,7 @@ this is a challenge for the probabilistic catalogs of the future.
 The age of \Gaia\ is also (perhaps coincidentally) the age of principled
 probabilistic inference in astrophysics.
 For this reason, the \Gaia\ data are being used in many probabilistic
-inferences (for example, cite lots of stuff).
+inferences (for example, \citealt{tri3, hawkins, sesar}).
 These probabilistic inferences take many forms, and have different levels
 of hierarchical complexity, but all of them require that there be, at base,
 a likelihood function, or a probability for the \Gaia\ data as a function
@@ -101,7 +105,7 @@ be used to construct an approximation to the likelihood function.
 
 One contemporary trend in astrophysics is to think about replacing rigid
 catalogs with something more probabilistic, possibly representing uncertainties
-through a sampling in catalog space (cite Brewer, Portillo, others).
+through a sampling in catalog space (for example, \citealt{brewer, portillo}).
 This idea is also informing some of the expected high-level outputs from
 the \Gaia\ Mission too (CITE).
 These ideas are interesting and new, and connect to the age of principled
@@ -170,10 +174,14 @@ $A_n$ is a normalization (and units-conversion) constant,
 $N(\xi\given\mu,V)$ is the Gaussian function for $\xi$ given mean $\mu$ and variance $V$,
 $\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
 and $\hat{\sigma}_{\varpi n}$ is the value given for the uncertainty on that parallax.
-The amplitude $A_n$ is not given in the \Gaia\ Catalog (though it could have been),
+The amplitude $A_n$ is not directly given in the \Gaia\ Catalog
 but it turns out---because of that factor of $1/Z$ in
 \equationname~(\ref{eq:inference})---it isn't needed for parameter-estimation-like
 inferences.
+If you \emph{do} find that you are doing an inference for which the amplitude
+$A_n$ matters---for instance some inferences that might involve comparing certain
+kinds of fully marginalized likelihoods---then $A_n$ can probably be reconstructed
+from a goodness-of-fit statistic in the Catalog (that we expect in \DRtwo).
 
 It is more stable numerically to do inferences with log probabilities.
 In the log,
@@ -213,7 +221,7 @@ or because the likelihood function has units of per-data (and not per-parallax),
 the change of parameters doesn't bring a change of units, at least not in the
 likelihood function (it would bring a change of units in the posterior pdf, or the
 prior pdf).
-I say more about these units issues elsewhere (CITE HOGG).
+I say more about these units issues elsewhere (\citealt{calculus}).
 
 In a more general inference, it is not just the parallax (or distance)
 that the investigator is modifying, but the (say) $D=5$ astrometric quantities
@@ -301,7 +309,7 @@ Attitude taken here is that we care about the raw data likelihood.
 
 HOGG: What have we assumed? That the \Gaia\ DPAC did LF optmimization. And the
 noise is close to Gaussian, and the signal-to-noise is high. These are wrong for
-TGAS, but the prior was so broad, it won't matter in practice. TECHNICALLY, you should use
+\TGAS\ (\citealt{michalik}), but the prior was so broad, it won't matter in practice (and explain how using the LF from Tycho as the prior for Gaia is a flat prior). TECHNICALLY, you should use
 the ratio of the Gaussian in \equationname~(\ref{eq:onedlike}) or (\ref{eq:like}) with
 a ratio of this Gaussian to the prior Gaussian, which is far broader. That would be
 a difference in log space.
@@ -344,5 +352,19 @@ HOGG: What are we doing with our inferences? If we are producing true posterior
 information (as with cite this and cite that), then our inferences may not
 be re-usable by anyone. This is a danger for all of us. And it isn't enough
 to report our priors, because: Reproducibility, support, etc.
+
+\acknowledgements
+It is a pleasure to thank
+  Lauren Anderson (Flatiron),
+  Coryn Bailer-Jones (MPIA),
+  Berry Holl (Geneva),
+  Boris Leistedt (NYU),
+  Lennart Lindegren (Lund),
+  Hans-Walter Rix (MPIA),
+and the Gotham \Gaia\ community for help with this project.
+This work was partially supported by
+  the National Science Foundation (grant \acronym{AST-1517237}).
+
+\bibliography{gaia}
 
 \end{document}

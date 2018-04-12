@@ -4,6 +4,7 @@ all: gaia_like.pdf
 
 %.pdf: %.tex
 	pdflatex $<
+	bibtex $*
 	pdflatex $<
 	pdflatex $<
 
