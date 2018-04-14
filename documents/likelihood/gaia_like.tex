@@ -129,9 +129,12 @@ no matter what their prior beliefs}.
 
 \section{A likelihood function for \textsl{Gaia}}
 In the simplest possible case, imagine that we are trying to infer
-the true distance $d_n$ to a star $n$ given the \Gaia\ data $y_n$ that
+the true\footnote{There are many possible meanings for the word ``true''.
+  In this context, we say the ``true distance'' because it is not the measured
+  distance, but rather the distance that the star truly has in some model.}
+distance $d_n$ to a star $n$ given the \Gaia\ data $y_n$ that
 pertain to star $n$, and nothing else
-(which is the goal of CITE TRI--CORYN).
+(which is the goal, for example, of \citealt{tri2})
 The inference looks like this:
 \begin{eqnarray}
 p(d_n\given y_n) = \frac{1}{Z_n}\,p(y_n\given d_n)\,p(d_n)
@@ -170,11 +173,11 @@ p(y_n\given\varpi_n) &=& A_n\,N(\varpi_n\given\hat{\varpi}_n,\hat{\sigma}^2_{\va
 \quad ,
 \end{eqnarray}
 where
-$\varpi_n$ is the true parallax to star $n$ (implicitly in radians here),
-$p(y_n\given\varpi_n)$ is the likelihood as a function of parallax (rather than distance),
+$\varpi_n$ is the true parallax to star $n$ at true distance $d_n$ (implicitly $\varpi_n$ is measured in radians here),
+$p(y_n\given\varpi_n)$ is the likelihood as a function of true parallax (rather than distance),
 $A_n$ is a normalization (and units-conversion) constant,
 $N(\xi\given\mu,V)$ is the Gaussian function for $\xi$ given mean $\mu$ and variance $V$,
-$\hat{\varpi}_n$ is the value given for the parallax of star $n$ in the \Gaia\ Catalog,
+$\hat{\varpi}_n$ is the (noisy) value given for the parallax of star $n$ in the \Gaia\ Catalog,
 and $\hat{\sigma}_{\varpi n}$ is the value given for the uncertainty on that parallax.
 The amplitude $A_n$ is not directly given in the \Gaia\ Catalog
 but it turns out---because of that factor of $1/Z$ in
@@ -210,7 +213,7 @@ The likelihood function (\ref{eq:onedlike}) returns the answer to the question:
 How probable are the observed data, if $\varpi_n$ is the true parallax of
 star $n$?
 
-A few technical notes related to dimensions or units.
+It is worth making a few technical notes related to dimensions or units:
 Because the data $y_n$ and
 the true parallax $\varpi_n$ have (in general, though not always) different units,
 the unknown amplitude $A_n$ will have (in general) non-trivial units.
@@ -290,6 +293,8 @@ to make likelihoods for collections of stars.
 None of that hierarchical structure or marginalization changes the story here;
 which is that the internal likelihood $p(y_n\given X_n)$ should be given the
 Gaussian form in \equationname~(\ref{eq:like}).
+
+HOGG: Deterministic vs stochastic parameters.
 
 \section{Discussion}
 In order to perform inferences
