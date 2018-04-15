@@ -265,6 +265,12 @@ Q_n &\equiv& \ln\frac{A_n}{\sqrt{||2\pi\,\hat{C}_{Xn}||}}
 \end{eqnarray}
 where we have implicitly assumed that the $D$-vectors are column vectors.
 
+One comment to make briefly here is that although the \Gaia\ Catalog contains
+the covariance matrices $\hat{C}_n$, those matrices are not in the data in a
+trivial form.
+They must be constructed from the Catalog entries.
+Read the manual for details.
+
 The likelihood functions of (\ref{eq:onedlike}) and (\ref{eq:like}) are
 probabilities of the observed \Gaia\ data as a
 function of astrometric parameters.
@@ -340,17 +346,16 @@ inferences about the world.
 In this case, I am recommending making certain decisions.
 The first and most important is to decide that the likelihood function
 has a Gaussian form, with mean and width set by \Gaia\ Catalog entries.
-I am also implicitly mkaing another recommendation, but it is a bit more
+That is, assuming that the data are generated from the world by some mechanism
+that is fundamentally Gaussian in the true parameters.
+I am also implicitly making another recommendation, but it is a bit more
 subtle:
 I am recommending making the assumption that the \Gaia\ Catalog contains
 nearly-sufficient statistics about the raw data, and that the likelihood function
 constructed here is some kind of approximation for a probability for the raw data
 from the Mission (which we currently don't get to see).
 Another equally valid attitude to take is that the \Gaia\ Catalog
-\emph{is}\footnote{%
-  I'm also going to recommend that we ignore grammar issues
-  related to whether the data \emph{is} something
-  or the data \emph{are} something.}
+\emph{is}
 the \Gaia\ data, and then this is just an assumption about how the world
 (which is, apparently, full of true values for stellar positions and velocities)
 generated the \Gaia\ Catalog, not the \Gaia\ raw data.
@@ -359,7 +364,13 @@ there is no change to anything we do if we take the latter view.
 That is, this is a purely philosophical position.
 
 Now, in detail, what have we really assumed about the \Gaia\ data?
-
+That is, what assumptions would make the Gaussian form accurate?
+There are a host of things to say here, so I will only say a few of the
+most important things.
+The first is that we are assuming that the \Gaia\ team is delivering
+accurate results.
+We are assuming that the Catalog is accurate, in terms of parameter
+measurements and associated error variances and covariances....HOGG
 
 HOGG: What have we assumed? That the \Gaia\ \DPAC\ did and will do LF optmimization.
 And the
