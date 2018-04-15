@@ -327,15 +327,39 @@ that the Catalog contains likelihood information, and accurate (and sufficient)
 statistics of the data.
 I give explicit forms for the likelihood function surrogate in
 \equationname s~(\ref{eq:onedlike}) and (\ref{eq:like}).
-These likelihood functional forms are not new---they are used in multiple places
-in the literature (for example, \citealt{leistedt, oh})---the point of
+These likelihood functional forms are not new---as I have emphasized,
+they are used in multiple places
+in the literature (for example, \citealt{tri2, leistedt, oh})---the point of
 this is to make the
 likelihood function assumptions explicit.
 
-HOGG: As we said above: Can think of this as a LF given the catalog data. Or of the raw data.
-These will be identical if the catalog contains a set of sufficient statistics
-for the raw data!
-Attitude taken here is that we care about the raw data likelihood.
+One of my soapbox issues is that inference is technically \emph{subjective}.
+The investigator must make decisions about what constitutes the data,
+and details of the model that generates those data, in order to make
+inferences about the world.
+In this case, I am recommending making certain decisions.
+The first and most important is to decide that the likelihood function
+has a Gaussian form, with mean and width set by \Gaia\ Catalog entries.
+I am also implicitly mkaing another recommendation, but it is a bit more
+subtle:
+I am recommending making the assumption that the \Gaia\ Catalog contains
+nearly-sufficient statistics about the raw data, and that the likelihood function
+constructed here is some kind of approximation for a probability for the raw data
+from the Mission (which we currently don't get to see).
+Another equally valid attitude to take is that the \Gaia\ Catalog
+\emph{is}\footnote{%
+  I'm also going to recommend that we ignore grammar issues
+  related to whether the data \emph{is} something
+  or the data \emph{are} something.}
+the \Gaia\ data, and then this is just an assumption about how the world
+(which is, apparently, full of true values for stellar positions and velocities)
+generated the \Gaia\ Catalog, not the \Gaia\ raw data.
+It is worthy of note and comment here that although I take the former view,
+there is no change to anything we do if we take the latter view.
+That is, this is a purely philosophical position.
+
+Now, in detail, what have we really assumed about the \Gaia\ data?
+
 
 HOGG: What have we assumed? That the \Gaia\ \DPAC\ did and will do LF optmimization.
 And the
