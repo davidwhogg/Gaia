@@ -1,3 +1,9 @@
+% This Note is Copyright 2018 the author.
+
+% To-Do
+% -----
+% - get more non-self-citations in here!
+
 \documentclass[12pt, modern]{aastex62}
 
 \addtolength{\topmargin}{-0.25in}
@@ -269,7 +275,7 @@ How do we deal with these nuisance parameters, or how can we ignore them?
 Implicitly, I am assuming here that the \Gaia\ Catalog team has either optimized
 or marginalized out these nuisance parameters.
 Since the \Gaia\ Mission delivers immense signal-to-noise on these nuisance
-parameters in most cases, it won't matter much, technically, to this
+parameters in most cases (\citealt{holl}), it won't matter much, technically, to this
 discussion whether they optimize
 the nuisance parameters or marginalize them out.
 
@@ -278,7 +284,8 @@ Of course, most inferences are not as simple as the inference described by
 Except in rare cases, we aren't just trying to find out the distance to a single
 star!
 We usually are trying to fit some model of the world, or of some set of stars,
-or calibrate a color-luminosity relationship, or something like that (CITE VARIOUS).
+or calibrate a color-luminosity relationship, or something like that
+(for example, \citealt{sesar, hawkins, leistedt, oh, anderson}).
 In these cases, there is a model $p(X_n\given\theta)$ which says what we expect
 for star $n$'s true astrometric quantites $X_n$, given a set of parameters $\theta$
 of our larger model.
@@ -307,7 +314,7 @@ statistics of the data.
 I give explicit forms for the likelihood function surrogate in
 \equationname s~(\ref{eq:onedlike}) and (\ref{eq:like}).
 These likelihood functional forms are not new---they are used in multiple places
-in the literature (for example, \citealt{Leistedt, Oh})---the point of
+in the literature (for example, \citealt{leistedt, oh})---the point of
 this is to make the
 likelihood function assumptions explicit.
 
@@ -336,7 +343,9 @@ model is correct and that the noise is entirely Gaussian.
 That's probably a bad assumption in detail,
 especially as there are cosmic rays and there is binary (and triple)
 contamination and stellar blending and crowding and so on.
-However, it is the standard assumption across \Gaia\ science at present (CITE THINGS).
+However, it is the standard assumption across \Gaia\ science at
+present (see, for example, all the previous citations for uses of a
+\Gaia\ likelihood function).
 
 One thing I like to say about Gaussianity is that if you are given a mean
 and a variance for a distribution, and you believe those statistics to be
@@ -359,7 +368,8 @@ LF approximation might require it!
 They are required if the team is delivering likelihood information.
 
 HOGG: What are we doing with our inferences? If we are producing true posterior
-information (as with CITE this and CITE that), then our inferences may not
+information for, say, distances or parallaxes (as in, for example,
+\citealt{tri3, leistedt, anderson}), then our inferences may not
 be re-usable by anyone. This is a danger for all of us. And it isn't enough
 to report our priors, because: Reproducibility, support, etc.
 
