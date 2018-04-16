@@ -433,13 +433,13 @@ Catalog, no matter how much data are taken.
 For now we are ignoring all of these effects, because for now the Catalogs ignore
 these effects.
 
-What about other sources of non-Gaussianity?
+There are other sources of non-Gaussianity:
 There are cosmic rays and there is binary (and triple)
 contamination and stellar blending and crowding and so on; won't these
 induce non-Gaussianities?
 They will, probably, and there are empirical hints in the data
-of such issues (CITE PAPER LENNART POINTS ME TO).
-However, it is the standard assumption across \Gaia\ science at
+of such issues.
+However, Gaussianity is the standard assumption across \Gaia\ science at
 present (see, for example, all the previous citations for uses of a
 \Gaia\ likelihood function), and it is the only sensible assumption in a
 context in which we are given nothing more than a mean value and a variance
@@ -457,14 +457,36 @@ The point here is that the Gaussianity assumption in this work is strongly conne
 to the assumption that the \Gaia\ Catalog is delivering accurate statistics of
 the data.
 
-HOGG: What about binaries and so on? Hard to see how the \Gaia\ Collaboration can
-maintain the likelihood framework in this case...
+I have listed many assumptions here; it is worthy of note that most
+assumptions can be \emph{tested}.
+Testing assumptions about the likelihood function can be challenging,
+but there are classes of objects, like quasars, and co-moving binary stars,
+and Solar-System objects, that have very predictable astrometric properties,
+or properties that are highly constrained by external physical considerations.
+These objects can be used to test likelihood-function assumptions.
 
-HOGG: What are we doing with our inferences? If we are producing true posterior
-information for, say, distances or parallaxes (as in, for example,
-\citealt{tri3, leistedt, anderson}), then our inferences may not
-be re-usable by anyone. This is a danger for all of us. And it isn't enough
-to report our priors, because: Reproducibility, support, etc.
+Right now, with the simple 5-parameter solutions for stars (that is, descriptions
+in terms of just a celestial position, parallax, and proper motion), it is possible
+to do likelihood optimization straightforwardly because the model is close to linear.
+Once the space opens up to binary companions, exoplanets, and hierarchical systems,
+there will be no straightforward way to optimize the likelihood, even for
+a single \Gaia\ source, and the likelihood function will become
+(in general) multi-modal and non-Gaussian.
+The \Gaia\ \DPAC\ will have to face two issues:
+One is how to explore and the full space or distribution of parameters that is
+consistent with the data.
+The other is how to represent and deliver that information to the user
+so that it is usable in inferences.
+
+Even now, some of the post-processing of \Gaia\ \TGAS\ data to deliver
+improved distance and parallax estimates are producing not likelihood outputs
+but rather posterior outputs (for example, \citealt{tri3, leistedt, anderson}).
+In order for these outputs to be usable in downstream inferences,
+they have to be convertable back into likelihood (or marginalized-likelihood) form.
+It isn't sufficient to say ``the prior of the next experiment will be the posterior
+of the previous experiment'' because the down-stream user might have extremely
+different goals, or highly informative external data. In either case, that user
+needs likelihood information from the Mission.
 
 Finally, I want to end by answering the age-old question:
 \emph{Why does the \Gaia\ Catalog contain negative parallaxes?}
@@ -485,7 +507,7 @@ of the likelihood function so we can do simple inferences.
 Those desiderata strongly push us to a world in which \Gaia\ reports many
 negative parallaxes.
 
-Thank you, \Gaia\ Collaboration.
+Thank you, \Gaia\ Mission and Collaboration.
 
 \acknowledgements
 It is a pleasure to thank

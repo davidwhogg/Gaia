@@ -669,7 +669,7 @@ revtex4-1.cls^^J^^J}\stop
 \raggedright
 {\sc Draft version \today}\\[2pt]
 {\footnotesize
-Typeset using \LaTeX\ {\bf modern} style in AASTeX62}
+Typeset using \LaTeX\ {\bf modern} style in AASTeX62 (with tiny tweaks by DWH)}
 \vskip48pt
 }
 \else
@@ -771,7 +771,7 @@ footnote\the\fncount\endcsname{\if@two@col\hsize=242pt\fi\relax#1}}
 %% 
 \renewcommand\title[2][]{%
 \def\@title{\setbox0=\vbox{\let\footnote\tempfootnote #2}%
-{\let\footnote\tempfootnoteintitle%\uppercase
+{\let\footnote\tempfootnoteintitle\Large%\uppercase
 {#2}}%% here???
 \kickoutfootnotes
 \ifdoublespace\vskip 3\baselineskip\fi
