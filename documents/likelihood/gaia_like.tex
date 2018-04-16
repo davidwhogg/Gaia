@@ -68,7 +68,19 @@ that they deliver likelihood information about the fundamental data;
 this is a challenge for the probabilistic catalogs of the future.
 \end{abstract}
 
-\keywords{foo --- bar}
+\keywords{%
+astrometry
+---
+catalogs
+---
+methods: statistical
+---
+parallaxes
+---
+proper motions
+---
+stars: distances
+}
 
 \section*{~}\clearpage
 \section{Introduction}
@@ -250,7 +262,7 @@ where now
 $X_n$ is a $D$-vector of true values for the astrometric quantities for star $n$,
 $p(y_n\given X_n)$ is the likelihood as a function of that vector of true quantities,
 $A_n$ is again a normalization (and units-conversion) constant,
-$N(\xi\given\mu,V)$ is now the Gaussian function for $D$-vector $\xi$ given mean $D$-vector $\mu$ and $D\times D$ covariance matrix $V$,
+$N(\xi\given\mu,V)$ is now the Gaussian function for $D$-vector $\xi$ given $D$-vector mean $\mu$ and $D\times D$ covariance matrix $V$,
 $\hat{X}_n$ is the $D$-vector of values given for the $D$ astrometric quantities for star $n$ in the \Gaia\ Catalog,
 and $\hat{C}_{Xn}$ is the value given for the $D\times D$ covariance matrix for that
 $D$-vector.
@@ -484,6 +496,9 @@ It is a pleasure to thank
   Lennart Lindegren (Lund),
   Hans-Walter Rix (MPIA),
 and the Gotham \Gaia\ community for help with this project.
+This work was partially supported by
+  the National Science Foundation (grant \acronym{AST-1517237}).
+
 This project implicitly (though not explicitly) made use of data from the
 the European Space Agency
 mission \Gaia\ (\url{http://www.cosmos.esa.int/gaia}), processed by the
@@ -491,9 +506,6 @@ mission \Gaia\ (\url{http://www.cosmos.esa.int/gaia}), processed by the
 \url{http://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding for the
 \DPAC\ has been provided by national institutions, in particular the
 institutions participating in the Gaia Multilateral Agreement.
-
-This work was partially supported by
-  the National Science Foundation (grant \acronym{AST-1517237}).
 
 \bibliography{gaia}
 
