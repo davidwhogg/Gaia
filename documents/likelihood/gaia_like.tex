@@ -4,7 +4,7 @@
 % -----
 % - get more non-self-citations in here!
 
-\documentclass[12pt, modern]{aastex62}
+\documentclass[12pt, modern]{aastex62h}
 
 \addtolength{\topmargin}{-0.25in}
 \addtolength{\textheight}{0.50in}
@@ -12,6 +12,7 @@
 
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\Gaia}{\textsl{Gaia}}
+\newcommand{\Tycho}{\textsl{Tycho}}
 \newcommand{\DRone}{\textsl{\acronym{DR1}}}
 \newcommand{\DRtwo}{\textsl{\acronym{DR2}}}
 \newcommand{\TGAS}{\textsl{\acronym{TGAS}}}
@@ -364,37 +365,73 @@ there is no change to anything we do if we take the latter view.
 That is, this is a purely philosophical position.
 
 Now, in detail, what have we really assumed about the \Gaia\ data?
-That is, what assumptions would make the Gaussian form accurate?
+That is, what assumptions would make the assumed Gaussian form accurate?
 There are a host of things to say here, so I will only say a few of the
 most important things.
 The first is that we are assuming that the \Gaia\ team is delivering
 accurate results.
 We are assuming that the Catalog is accurate, in terms of parameter
-measurements and associated error variances and covariances....HOGG
+measurements and associated error variances and covariances.
+Second, we have also assumed that the Catalog is a representation of likelihood
+information.
+That is, the \Gaia\ \DPAC\ has optimized a likelihood, or something very much
+like that.
+Thirdly, we have assumed that the likelihood is close to Gaussian in form.
+The likelihood will be exactly Gaussian when the raw data are connected
+to the model by Gaussian noise, and the model is linear.
+These requirements, amazingly, are close to met in the \Gaia\ global solution.
+But for central-limit-theorem-like reasons, any likelihood will become close
+to Gaussian when the data are good enough.
+So we are assuming something jointly about the simplicity of the model and
+the data constraining it.
 
-HOGG: What have we assumed? That the \Gaia\ \DPAC\ did and will do LF optmimization.
-And the
-noise is close to Gaussian, and the signal-to-noise is high. These are wrong for
-\TGAS\ (\citealt{michalik, dr1}), but the prior was so broad, it won't matter in practice (and explain how using the LF from Tycho as the prior for Gaia is a flat prior). TECHNICALLY, you should use
-the ratio of the Gaussian in \equationname~(\ref{eq:onedlike}) or (\ref{eq:like}) with
-a ratio of this Gaussian to the prior Gaussian, which is far broader. That would be
-a difference in log space.
+The second assumption---that the Catalog is a representation of likelihood
+information---is in fact violated in detail by \Gaia\ \DRone\ \TGAS.
+This catalog is a set of posterior inferences, one per star (\citealt{michalik, dr1}).
+However, the posterior inference for the \Gaia\ data was made using a prior
+built from the \Tycho\ likelihood outputs (with effectively very broad
+or nearly flat priors),
+so the \TGAS\ Catalog can be seen as providing (nearly) pure likelihood information,
+but for the combined \Gaia +\Tycho\ data.
+In principle, any user of the \TGAS\ Catalog should build a likelihood function
+that is a ratio of the posterior Gaussian to the prior (or a difference
+of logs)!
+But this is a detail in the context of the very weakly informative priors
+used in the construction of the \TGAS\ data set.
+The weak priors mean that the posterior pdf shape is very similar to
+(or perhaps identical to) the likelihood
+function shape for these data (that is, the combined \Gaia +\Tycho\ data).
+This point will return below, because the \Gaia\ Collaboration imagines using
+more informative priors in the future for some Catalog entries.
 
-HOGG: What about star--star covariances? These are being ignored too, but they
-will be small in the long run (\citealt{holl}).
+Another assumption we have made is that we can treat each star indpendently.
+That is, we can write down a likelihood for star $n$ without considering any
+other star $n'$.
+This assumption actually comprises two qualitatively different assumptions.
+The first is that the inference of the \Gaia\ attitude model (and other nuisances)
+induces no covariances between stars.
+This is not true in detail, but becomes more true as the Mission proceeds
+(\citealt{holl}).
+The second is that the raw data can be separated cleanly between star $n$ and
+star $n'$.
+This isn't true for stars that overlap consistently on the focal plane; that is,
+for stars that are closer than a few tenths of an arcsecond.
+These close pairs (or K-tuples) of stars will remain covariant in the
+Catalog, no matter how much data are taken.
+For now we are ignoring all of these effects, because for now the Catalogs ignore
+these effects.
 
-HOGG: And, relatedly, can we really split the data into disjoint $y_n$ subsets?
-No!
-
-\emph{What about non-Gaussianity?} Everything written here
- explicitly assumes that the \Gaia\ noise
-model is correct and that the noise is entirely Gaussian.
-That's probably a bad assumption in detail,
-especially as there are cosmic rays and there is binary (and triple)
-contamination and stellar blending and crowding and so on.
+What about other sources of non-Gaussianity?
+There are cosmic rays and there is binary (and triple)
+contamination and stellar blending and crowding and so on; won't these
+induce non-Gaussianities?
+They will, probably, and there are empirical hints in the data
+of such issues (CITE PAPER LENNART POINTS ME TO).
 However, it is the standard assumption across \Gaia\ science at
 present (see, for example, all the previous citations for uses of a
-\Gaia\ likelihood function).
+\Gaia\ likelihood function), and it is the only sensible assumption in a
+context in which we are given nothing more than a mean value and a variance
+around that.
 
 One thing I like to say about Gaussianity is that if you are given a mean
 and a variance for a distribution, and you believe those statistics to be
@@ -403,7 +440,7 @@ can make.
 It is the maximum-entropy distribution with that mean and variance!
 Of course this point is something of a red herring, because it is precisely
 when the noise is non-Gaussian that it will be impossible to obtain an
-accurate estimate of the mean and variance.
+accurate estimate of the mean and variance!
 The point here is that the Gaussianity assumption in this work is strongly connected
 to the assumption that the \Gaia\ Catalog is delivering accurate statistics of
 the data.
