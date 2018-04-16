@@ -448,16 +448,32 @@ the data.
 HOGG: What about binaries and so on? Hard to see how the \Gaia\ Collaboration can
 maintain the likelihood framework in this case...
 
-HOGG: Why are there negative parallaxes? There will be, and you can think about
-it two ways: Linear fitting will do this at low s/n in general. And the
-LF approximation might require it!
-They are required if the team is delivering likelihood information.
-
 HOGG: What are we doing with our inferences? If we are producing true posterior
 information for, say, distances or parallaxes (as in, for example,
 \citealt{tri3, leistedt, anderson}), then our inferences may not
 be re-usable by anyone. This is a danger for all of us. And it isn't enough
 to report our priors, because: Reproducibility, support, etc.
+
+Finally, I want to end by answering the age-old question:
+\emph{Why does the \Gaia\ Catalog contain negative parallaxes?}
+The answer, in the context of these remarks, is obvious:
+Because for some stars, the peak of the Gaussian likelihood function happens
+to be at a negative parallax!
+In general, if a model is close to a linear fit in the presence of Gaussian
+noise,
+at low signal-to-noise, the model will produce negative linear coefficients just as
+readily as positive coefficients.
+That is, linear fitting in a likelihood context will always produce negative
+model parameters.
+If the Catalog produced posterior information, rather than likelihood information,
+these negative parallaxes might be cut off by a prior.
+But for our purposes, this would be bad!
+We want the Catalog to translate into a simple description
+of the likelihood function so we can do simple inferences.
+Those desiderata strongly push us to a world in which \Gaia\ reports many
+negative parallaxes.
+
+Thank you, \Gaia\ Collaboration.
 
 \acknowledgements
 It is a pleasure to thank
@@ -468,6 +484,14 @@ It is a pleasure to thank
   Lennart Lindegren (Lund),
   Hans-Walter Rix (MPIA),
 and the Gotham \Gaia\ community for help with this project.
+This project implicitly (though not explicitly) made use of data from the
+the European Space Agency
+mission \Gaia\ (\url{http://www.cosmos.esa.int/gaia}), processed by the
+\Gaia\ Data Processing and Analysis Consortium (\DPAC,
+\url{http://www.cosmos.esa.int/web/gaia/dpac/consortium}). Funding for the
+\DPAC\ has been provided by national institutions, in particular the
+institutions participating in the Gaia Multilateral Agreement.
+
 This work was partially supported by
   the National Science Foundation (grant \acronym{AST-1517237}).
 
