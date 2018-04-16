@@ -3,6 +3,8 @@
 % To-Do
 % -----
 % - get more non-self-citations in here!
+% - that is, find more papers that use a LF like this, but aren't mine.
+% - address the question: Can I nonlinearly transform the 5 parameters, and still be Gaussian? NO!
 
 \documentclass[12pt, modern]{aastex62h}
 
@@ -16,7 +18,7 @@
 \newcommand{\DRone}{\textsl{\acronym{DR1}}}
 \newcommand{\DRtwo}{\textsl{\acronym{DR2}}}
 \newcommand{\TGAS}{\textsl{\acronym{TGAS}}}
-\newcommand{\DPAC}{\textsl{\acronym{DPAC}}}
+\newcommand{\DPAC}{{\acronym{DPAC}}}
 \newcommand{\documentname}{\textsl{Note}}
 \newcommand{\equationname}{equation}
 
@@ -76,7 +78,7 @@ catalogs
 methods: statistical
 ---
 parallaxes
----
+---\\
 proper motions
 ---
 stars: distances
@@ -512,12 +514,13 @@ Thank you, \Gaia\ Mission and Collaboration.
 \acknowledgements
 It is a pleasure to thank
   Lauren Anderson (Flatiron),
-  Coryn Bailer-Jones (MPIA),
+  Coryn Bailer-Jones (\acronym{MPIA}),
   Berry Holl (Geneva),
-  Boris Leistedt (NYU),
+  Boris Leistedt (\acronym{NYU}),
   Lennart Lindegren (Lund),
-  Hans-Walter Rix (MPIA),
-and the Gotham \Gaia\ community for help with this project.
+  Hans-Walter Rix (\acronym{MPIA}),
+and the NYC Stars and \Gaia\ \DRtwo\ group meeting attendees
+for help with this project.
 This work was partially supported by
   the National Science Foundation (grant \acronym{AST-1517237}).
 
