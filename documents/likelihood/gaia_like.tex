@@ -475,7 +475,7 @@ there will be no straightforward way to optimize the likelihood, even for
 a single \Gaia\ source, and the likelihood function will become
 (in general) multi-modal and non-Gaussian.
 The \Gaia\ \DPAC\ will have to face two issues:
-One is how to explore and the full space or distribution of parameters that is
+One is how to explore the full space or distribution of parameters that is
 consistent with the data.
 The other is how to represent and deliver that information to the user
 so that it is usable in inferences.
@@ -492,13 +492,14 @@ needs likelihood information from the Mission.
 
 Finally, I want to end by answering the age-old question:
 \emph{Why does the \Gaia\ Catalog contain negative parallaxes?}
-The answer, in the context of these remarks, is obvious:
-Because for some stars, the peak of the Gaussian likelihood function happens
+The answer, in the context of these remarks, is that the Catalog
+is a description of the likelihood function, and
+for some stars, the peak of the Gaussian likelihood function happens
 to be at a negative parallax!
 In general, if a model is something like a linear fit in the presence of Gaussian
 noise, then
-at low signal-to-noise the model will produce negative linear coefficients just as
-readily as positive coefficients.
+at low signal-to-noise the model will produce (at the maximum of its likelihood
+function) negative linear coefficients just as readily as positive coefficients.
 That is, linear fitting in a likelihood context will always produce negative
 model parameters.
 If the Catalog produced posterior information, rather than likelihood information,
