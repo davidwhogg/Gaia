@@ -1,11 +1,5 @@
 % This Note is Copyright 2018 the author.
 
-% To-Do
-% -----
-% - get more non-self-citations in here!
-% - that is, find more papers that use a LF like this, but aren't mine.
-% - address the question: Can I nonlinearly transform the 5 parameters, and still be Gaussian? NO!
-
 \documentclass[12pt, modern]{aastex62h}
 
 \addtolength{\topmargin}{-0.25in}
@@ -285,6 +279,27 @@ the covariance matrices $\hat{C}_n$, those matrices are not in the data in a
 trivial form.
 They must be constructed from the Catalog entries.
 Read the manual for details.
+
+How what about transformations of the astrometric quantities?
+If the \Gaia\ likelihood is Gausssian in the Catalog values of celestial position,
+parallax, and proper motion, is it also Gaussian in other functions of those
+variables?
+The answer is that it is only Gaussian in strictly linear transformations
+of these parameters.
+It isn't Gaussian, therefore, in distance (which is inverse parallax), nor
+is it Gaussian in velocity (which is proper motion over parallax).
+That is, the likelihood function in \equationname~(\ref{eq:onedlike}) has a
+Gaussian form when plotted against parallax, but it doesn't when plotted against
+distance.
+That said,
+The proper motion likelihood will be Gaussian in any celestial coordinate
+system you prefer (equatorial or ecliptic or Galactic, for example),
+because these transformations (coordinate changes)
+are simply rotations, which themselves are linear transformations.
+Of course,
+if you transform the $D$-vector $\hat{X}_n$ by a linear operator $R$ to make a new
+vector $R\cdot\hat{X}_n$, you must also transform the covariance matrix to the new
+matrix $R\cdot\hat{C}_{Xn}\cdot R\T$.
 
 The likelihood functions of (\ref{eq:onedlike}) and (\ref{eq:like}) are
 probabilities of the observed \Gaia\ data as a
