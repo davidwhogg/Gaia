@@ -1,7 +1,6 @@
 % This Note is Copyright 2018 the author.
 
 % todo:
-% - add comments about non-astrometric properties of the stars!
 % - add comments about representation of complex distributions in the future!
 % - cite qp paper?
 
@@ -521,6 +520,12 @@ It isn't sufficient to say ``the prior of the next experiment will be the poster
 of the previous experiment'' because the down-stream user might have extremely
 different goals, or highly informative external data. In either case, that user
 needs likelihood information from the Mission.
+When the \Gaia\ \DPAC\ starts doing binary-star astrometric orbit inferences, the likelihood
+functions will become complex and multi-modal in the orbit-parameter space,
+and they will be faced with challenging questions about how to represent this
+information back to the user properly.
+Many choices here are either very computationally expensive, very complex, or
+limited in support (in the mathematical sense).
 
 Finally, I want to end by answering the age-old question:
 \emph{Why does the \Gaia\ Catalog contain negative parallaxes?}
@@ -529,7 +534,7 @@ is a description of the likelihood function, and
 for some stars, the peak of the Gaussian likelihood function happens
 to be at a negative parallax!
 In general, if a model is something like a linear fit in the presence of Gaussian
-noise, then
+noise (and the \Gaia\ astrometric solution \emph{is} something like this), then
 at low signal-to-noise the model will produce (at the maximum of its likelihood
 function) negative linear coefficients just as readily as positive coefficients.
 That is, linear fitting in a likelihood context will always produce negative
@@ -542,7 +547,7 @@ of the likelihood function so we can do simple inferences.
 Those requirements put us in a world in which \Gaia\ reports many
 negative parallaxes.
 
-Thank you, \Gaia\ Mission and Collaboration.
+Thank you, \Gaia\ Mission, \Gaia\ \DPAC, and \Gaia\ Collaboration.
 
 \acknowledgements
 It is a pleasure to thank
