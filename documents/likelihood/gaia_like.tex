@@ -359,6 +359,18 @@ over some set of parameters, then the investigator will have to do integrals
 like that shown in \equationname~(\ref{eq:marginalize}).
 An example of this is given in \citet{oh}.
 
+Finally, you might want to do inference not purely on the astrometric
+quantities (celestial position, parallax, and proper motion) but also
+on photometric quantities (magnitudes, colors, reddenings).
+In this \documentname, I don't take a position on the best likelihood function
+approximations for these other observables, but in general my recommendations
+would be similar: Use the Catalog entries to construct a Gaussian function
+to stand in for the likelihood function.
+In general, the magnitudes will have uncertainties that are closest to
+Gaussian in flux space (not magnitude space) but I expect that the photometric
+information from the Mission is so precise that it won't matter that much
+what you assume here for most kinds of stars.
+
 \section{Discussion}
 In order to perform inferences
 with the \Gaia\ data, we need a likelihood function.
